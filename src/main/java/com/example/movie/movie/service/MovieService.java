@@ -2,15 +2,12 @@ package com.example.movie.movie.service;
 
 import com.example.movie.movie.dto.MovieRequestDto;
 import com.example.movie.movie.dto.MovieResponseDto;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
 public interface MovieService {
     // 먼저 기능 정리
-    List<MovieResponseDto> movieList();
+    List<MovieResponseDto> getMovieList();
     MovieResponseDto getMovieById();
     void createMovie();
     void updateMovie(Long movie_id,  MovieRequestDto movieRequestDto);

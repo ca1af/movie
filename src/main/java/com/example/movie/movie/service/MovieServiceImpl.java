@@ -15,7 +15,7 @@ public class MovieServiceImpl implements MovieService{
     private final MovieRepository movieRepository;
 
     @Override
-    public List<MovieResponseDto> movieList() {
+    public List<MovieResponseDto> getMovieList() {
         return null;
     }
 

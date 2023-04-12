@@ -4,6 +4,7 @@ import com.example.movie.movie.dto.MovieRequestDto;
 import com.example.movie.movie.dto.MovieResponseDto;
 import com.example.movie.movie.service.MovieService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,8 +15,13 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping("/api/v1/movies")
-    public List<MovieResponseDto> getMovieList(){
-        return null;
+    public ResponseEntity<List<MovieResponseDto>> getMovieList(){
+        List<MovieResponseDto> movieList = movieService.getMovieList();
+        if (movieList.isEmpty()){
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok().build();
+        }
     }
 
     @GetMapping("/api/v1/movies/{movie_id}")
