@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,12 @@ public class Movie {
     private String director;
     @Column
     private String posterImageUrl;
+    @Builder
+    public Movie(Long releaseDate, String movieName, String genre, String director, String posterImageUrl) {
+        this.releaseDate = releaseDate;
+        this.movieName = movieName;
+        this.genre = genre;
+        this.director = director;
+        this.posterImageUrl = posterImageUrl;
+    }
 }

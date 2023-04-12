@@ -2,6 +2,7 @@ package com.example.movie.movie.service;
 
 import com.example.movie.movie.dto.MovieRequestDto;
 import com.example.movie.movie.dto.MovieResponseDto;
+import com.example.movie.movie.entity.Movie;
 import com.example.movie.movie.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,13 +21,14 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public MovieResponseDto getMovieById() {
+    public MovieResponseDto getMovieById(Long movieId) {
         return null;
     }
 
     @Override
-    public void createMovie() {
-
+    public MovieResponseDto createMovie(MovieRequestDto movieRequestDto) {
+        Movie movie = Movie.builder().build();
+        return MovieResponseDto.of(movie);
     }
 
     @Override

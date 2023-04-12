@@ -11,6 +11,7 @@ public class MovieSearchCond {
     // 2. 영화 감독 이름으로 검색 정도?
 
     private String movieName;
+
     private String director;
 
     @Builder
