@@ -19,9 +19,14 @@ public class MovieServiceImpl implements MovieService{
     private final MovieRepository movieRepository;
 
     @Override
+    public List<MovieResponseDto> getMoviesDefault() {
+        return movieRepository.getMoviesDefault();
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<MovieResponseDto> getMovies(Long pageNum) {
-        return movieRepository.getMovieList(pageNum);
+        return movieRepository.getMovies(pageNum);
     }
 
     @Override

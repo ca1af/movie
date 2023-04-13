@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface MovieService {
     // 먼저 기능 정리
+    List<MovieResponseDto> getMoviesDefault();
     List<MovieResponseDto> getMovies(Long pageNum);
     List<MovieResponseDto> getMoviesBySearchCond(MovieSearchCond movieSearchCond);
     MovieResponseDto getMovieById(Long movieId);

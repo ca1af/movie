@@ -16,6 +16,16 @@ import java.util.List;
 public class MovieController {
     private final MovieService movieService;
 
+    @GetMapping("/api/v1/movies")
+    public ResponseEntity<List<MovieResponseDto>> getMoviesDefault() {
+        List<MovieResponseDto> movieList = movieService.getMoviesDefault();
+        if (movieList.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(movieList);
+        }
+    }
+
     @GetMapping("/api/v1/movies/pages/{pageNum}")
     public ResponseEntity<List<MovieResponseDto>> getMovies(@PathVariable Long pageNum) {
         List<MovieResponseDto> movieList = movieService.getMovies(pageNum);
