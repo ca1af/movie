@@ -1,6 +1,8 @@
 package com.example.movie.movie.repository.query;
 
 import com.example.movie.movie.dto.MovieResponseDto;
+import com.example.movie.movie.dto.QMovieResponseDto;
+import com.example.movie.movie.entity.QMovie;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -27,8 +29,23 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
     }
 
     @Override
+    public List<MovieResponseDto> getMovieList(Long pageNum) {
+        return jpaQueryFactory
+                .select(new QMovieResponseDto(movie.id, movie.releaseDate, movie.movieName, movie.genre, movie.director, movie.posterImageUrl))
+                .from(movie)
+                .offset(pageNum - 1)
+                .limit(pageNum -1 + 10)
+                .fetch();
+    }
+
+    @Override
     public List<MovieResponseDto> searchMovieByCond(MovieSearchCond movieSearchCond) {
-//        jpaQueryFactory.select()
-        return null;
+        return jpaQueryFactory
+                .select((new QMovieResponseDto(movie.id, movie.releaseDate, movie.movieName, movie.genre, movie.director, movie.posterImageUrl)))
+                .from(movie)
+                .where(
+                        searchByMovieName(movieSearchCond.getMovieName()),
+                        searchByDirector(movieSearchCond.getDirector()))
+                .fetch();
     }
 }

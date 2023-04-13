@@ -17,8 +17,8 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping("/api/v1/movies")
-    public ResponseEntity<List<MovieResponseDto>> getMovieList(){
-        List<MovieResponseDto> movieList = movieService.getMovieList();
+    public ResponseEntity<List<MovieResponseDto>> getMovieList(@PathVariable Long pageNum){
+        List<MovieResponseDto> movieList = movieService.getMovieList(pageNum);
         if (movieList.isEmpty()){
             return ResponseEntity.noContent().build();
         } else {
