@@ -44,11 +44,13 @@ public class MovieController {
 
     @PutMapping("/api/v1/movies/{movie_id}")
     public ResponseEntity<Void> updateMovie(@PathVariable Long movie_id, @RequestBody MovieRequestDto movieRequestDto){
+        movieService.updateMovie(movie_id, movieRequestDto);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/api/v1/movies/{movie_id}")
     public ResponseEntity<Void> deleteMovie(@PathVariable Long movie_id){
+        movieService.deleteMovie(movie_id);
         return ResponseEntity.ok().build();
     }
 }
