@@ -45,7 +45,7 @@ public class MovieControllerTest {
         when(movieService.getMovies(pageNum)).thenReturn(movieList);
 
         // Then
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/movies1/{pageNum}", pageNum)
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/movies/pages/{pageNum}", pageNum)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNoContent())
                 .andReturn();
