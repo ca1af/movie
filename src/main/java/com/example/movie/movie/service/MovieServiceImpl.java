@@ -20,7 +20,7 @@ public class MovieServiceImpl implements MovieService{
 
     @Override
     @Transactional(readOnly = true)
-    public List<MovieResponseDto> getMovieList(Long pageNum) {
+    public List<MovieResponseDto> getMovies(Long pageNum) {
         return movieRepository.getMovieList(pageNum);
     }
 

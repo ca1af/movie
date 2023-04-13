@@ -31,14 +31,18 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
 
     @Override
     public List<MovieResponseDto> getMovieList(Long pageNum) {
+        int pageSize = 10;
+        long offset = (pageNum - 1) * pageSize;
+
         return jpaQueryFactory
                 .select(new QMovieResponseDto(movie.id, movie.releaseDate, movie.movieName, movie.genre, movie.director, movie.posterImageUrl))
                 .from(movie)
                 .where(movie.inUse.eq(true))
-                .offset(pageNum - 1)
-                .limit(pageNum - 1 + 10)
+                .offset(offset)
+                .limit(pageSize)
                 .fetch();
     }
+
 
     @Override
     public List<MovieResponseDto> searchMovieByCond(MovieSearchCond movieSearchCond) {

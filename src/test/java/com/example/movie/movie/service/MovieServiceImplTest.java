@@ -5,6 +5,7 @@ import com.example.movie.movie.entity.Movie;
 import com.example.movie.movie.repository.MovieRepository;
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,27 +20,24 @@ class MovieServiceImplTest {
     @Autowired
     private MovieRepository movieRepository;
 
-
-    void createDummiesBeforeTest(){
-        Movie movie = Movie.builder()
-                .releaseDate(1L)
-                .posterImageUrl("1")
-                .movieName("1")
-                .director("1")
-                .genre("1")
-                .build();
-        movieRepository.save(movie);
+    @Test
+    void getMovieListPagingTest() {
+        //when
+        List<MovieResponseDto> movieList = movieRepository.getMovieList(1L);
+        List<MovieResponseDto> movieList2 = movieRepository.getMovieList(2L);
+        //then : 페이징 잘 되고 있는지 확인
+        assertEquals(movieList.size(), 10);
+        assertEquals(movieList2.size(), 10);
     }
 
     @Test
-    @Transactional
-    void getMovieList() {
-        //given
-        createDummiesBeforeTest();
+    void getMoviesFailureTest(){
         //when
-        List<MovieResponseDto> movieList = movieRepository.getMovieList(1L);
+        List<MovieResponseDto> movieList = movieRepository.getMovieList(3L);
         //then
-        assertEquals(movieList.size(), 1);
+        assertEquals(0, movieList.size());
+
+        // Controller 테스트에서 상태코드 확인해볼까?
     }
 
     @Test
