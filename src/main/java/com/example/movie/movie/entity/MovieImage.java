@@ -1,6 +1,7 @@
 package com.example.movie.movie.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 
 @Entity
 public class MovieImage {
@@ -12,4 +13,18 @@ public class MovieImage {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Movie movie;
+
+    public void updateImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setMovie(Movie movie) {
+        this.movie = movie;
+    }
+    @Builder
+    public MovieImage(Long id, String imageUrl, Movie movie) {
+        this.id = id;
+        this.imageUrl = imageUrl;
+        this.movie = movie;
+    }
 }
