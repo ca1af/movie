@@ -36,8 +36,8 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
         return Optional.ofNullable(
                 jpaQueryFactory
                         .selectFrom(movie)
-                        .innerJoin(movie.movieVideos, movieVideo).fetchJoin()
-                        .innerJoin(movie.movieImages, movieImage).fetchJoin()
+                        .leftJoin(movie.movieVideos, movieVideo).fetchJoin()
+                        .leftJoin(movie.movieImages, movieImage).fetchJoin()
                         .where(movie.inUse.eq(true),
                                 movie.id.eq(movieId))
                         .fetchOne()
@@ -49,8 +49,8 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
 
         List<Movie> movieList = jpaQueryFactory
                 .selectFrom(movie)
-                .innerJoin(movie.movieImages, movieImage).fetchJoin()
-                .innerJoin(movie.movieVideos, movieVideo).fetchJoin()
+                .leftJoin(movie.movieImages, movieImage).fetchJoin()
+                .leftJoin(movie.movieVideos, movieVideo).fetchJoin()
                 .where(movie.inUse.eq(true))
                 .fetch();
 
@@ -64,8 +64,8 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
 
         List<Movie> movieList = jpaQueryFactory
                 .selectFrom(movie)
-                .innerJoin(movie.movieImages, movieImage).fetchJoin()
-                .innerJoin(movie.movieVideos, movieVideo).fetchJoin()
+                .leftJoin(movie.movieImages, movieImage).fetchJoin()
+                .leftJoin(movie.movieVideos, movieVideo).fetchJoin()
                 .where(movie.inUse.eq(true))
                 .offset(offset)
                 .limit(pageSize)
@@ -78,8 +78,8 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
     public List<MovieResponseDto> searchMovieByCond(MovieSearchCond movieSearchCond) {
         List<Movie> movieList = jpaQueryFactory
                 .selectFrom(movie)
-                .innerJoin(movie.movieImages, movieImage).fetchJoin()
-                .innerJoin(movie.movieVideos, movieVideo).fetchJoin()
+                .leftJoin(movie.movieImages, movieImage).fetchJoin()
+                .leftJoin(movie.movieVideos, movieVideo).fetchJoin()
                 .where(
                         searchByMovieName(movieSearchCond.getMovieName()),
                         searchByDirector(movieSearchCond.getDirector()),

@@ -84,11 +84,8 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public void deleteMovie(Long movie_id) {
-        Movie movie = movieRepository.findById(movie_id).orElseThrow(
-                () -> new NoSuchElementException("해당하는 영화가 없습니다")
-        );
-
-        movieRepository.deleteMovieById(movie.getId());
+    @Transactional
+    public void deleteMovie(Long movieId) {
+        movieRepository.deleteMovieById(movieId);
     }
 }
