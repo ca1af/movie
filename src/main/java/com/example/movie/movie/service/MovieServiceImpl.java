@@ -44,6 +44,7 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
+    @Transactional
     public MovieResponseDto createMovie(MovieRequestDto movieRequestDto) {
 
         Movie movie = Movie.builder()

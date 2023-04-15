@@ -12,4 +12,6 @@ public interface MovieQueryRepository {
     List<MovieResponseDto> searchMovieByCond(MovieSearchCond movieSearchCond);
     Optional<Movie> findByIdAndInUseIsTrue(Long movieId);
     void deleteMovieById(Long movieId);
+
+    void softDeleteMovieById(Long movieId);
 }

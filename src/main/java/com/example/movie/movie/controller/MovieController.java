@@ -36,9 +36,9 @@ public class MovieController {
         }
     }
 
-    @GetMapping("/api/v1/movies/{movie_id}")
-    public ResponseEntity<MovieResponseDto> getMovieById(@PathVariable Long movie_id){
-        return ResponseEntity.ok(movieService.getMovieById(movie_id));
+    @GetMapping("/api/v1/movies/{movieId}")
+    public ResponseEntity<MovieResponseDto> getMovieById(@PathVariable Long movieId){
+        return ResponseEntity.ok(movieService.getMovieById(movieId));
     }
 
     //PostMan 등으로 확인만 할거라면...그냥 JSon 형태의 데이터를 보여주는 게 낫나?...
