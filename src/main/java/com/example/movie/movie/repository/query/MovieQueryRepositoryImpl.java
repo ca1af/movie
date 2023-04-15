@@ -3,6 +3,7 @@ package com.example.movie.movie.repository.query;
 import com.example.movie.movie.dto.MovieResponseDto;
 import com.example.movie.movie.dto.QMovieResponseDto;
 import com.example.movie.movie.entity.Movie;
+import com.example.movie.movie.entity.QMovieVideo;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -10,8 +11,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.example.movie.movie.entity.QMovie.movie;
+import static com.example.movie.movie.entity.QMovieImage.movieImage;
+import static com.example.movie.movie.entity.QMovieVideo.movieVideo;
 
 @Repository
 public class MovieQueryRepositoryImpl implements MovieQueryRepository {
@@ -31,11 +35,14 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
 
     @Override
     public List<MovieResponseDto> getMoviesDefault() {
-        return jpaQueryFactory
-                .select(new QMovieResponseDto(movie.id, movie.releaseDate, movie.movieName, movie.genre, movie.director, movie.posterImageUrl))
-                .from(movie)
+        List<Movie> movieList = jpaQueryFactory
+                .selectFrom(movie)
+                .leftJoin(movie.movieImages, movieImage).fetchJoin()
+                .leftJoin(movie.movieVideos, movieVideo).fetchJoin()
                 .where(movie.inUse.eq(true))
                 .fetch();
+
+        return movieList.stream().map(MovieResponseDto::of).collect(Collectors.toList());
     }
 
     @Override

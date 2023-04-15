@@ -2,10 +2,7 @@ package com.example.movie.movie.entity;
 
 import com.example.movie.movie.dto.MovieRequestDto;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
