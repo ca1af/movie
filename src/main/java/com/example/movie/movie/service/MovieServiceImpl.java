@@ -40,6 +40,9 @@ public class MovieServiceImpl implements MovieService{
         Movie movie = movieRepository.findByIdAndInUseIsTrue(movieId).orElseThrow(
                 () -> new NoSuchElementException("해당하는 영화를 찾을 수 없습니다")
         );
+
+//        Movie movie2 = movieRepository.findById(movieId).orElseThrow(() -> new NoSuchElementException("해당하는 영화를 찾을 수 없습니다"));
+
         return MovieResponseDto.of(movie);
     }
 

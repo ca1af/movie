@@ -32,7 +32,21 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
     }
 
     @Override
+    public Optional<Movie> findByIdAndInUseIsTrue(Long movieId) {
+        return Optional.ofNullable(
+                jpaQueryFactory
+                        .selectFrom(movie)
+                        .innerJoin(movie.movieVideos, movieVideo).fetchJoin()
+                        .innerJoin(movie.movieImages, movieImage).fetchJoin()
+                        .where(movie.inUse.eq(true),
+                                movie.id.eq(movieId))
+                        .fetchOne()
+        );
+    }
+
+    @Override
     public List<MovieResponseDto> getMoviesDefault() {
+
         List<Movie> movieList = jpaQueryFactory
                 .selectFrom(movie)
                 .innerJoin(movie.movieImages, movieImage).fetchJoin()
@@ -75,20 +89,6 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
         return movieList.stream().map(MovieResponseDto::of).collect(Collectors.toList());
     }
 
-
-    @Override
-    public Optional<Movie> findByIdAndInUseIsTrue(Long movieId) {
-        return Optional.ofNullable(
-                jpaQueryFactory
-                        .selectFrom(movie)
-                        .innerJoin(movie.movieVideos, movieVideo).fetchJoin()
-                        .innerJoin(movie.movieImages, movieImage).fetchJoin()
-                        .where(movie.inUse.eq(true),
-                                movie.id.eq(movieId))
-                        .fetchOne()
-        );
-    }
-
     @Override
     public void deleteMovieById(Long movieId) {
         // join 이 일어나지 않는 가벼운 쿼리로 객체 탐색
@@ -111,12 +111,12 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
                     .execute();
         }
     }
-    @Override
-    public void softDeleteMovieById(Long movieId) {
-        jpaQueryFactory
-                .update(movie)
-                .set(movie.inUse, false)
-                .where(movie.id.eq(movieId))
-                .execute();
-    }
+//    @Override
+//    public void softDeleteMovieById(Long movieId) {
+//        jpaQueryFactory
+//                .update(movie)
+//                .set(movie.inUse, false)
+//                .where(movie.id.eq(movieId))
+//                .execute();
+//    }
 }
