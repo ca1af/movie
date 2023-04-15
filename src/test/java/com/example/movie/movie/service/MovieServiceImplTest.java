@@ -1,14 +1,16 @@
 package com.example.movie.movie.service;
 
 import com.example.movie.movie.dto.MovieResponseDto;
+import com.example.movie.movie.entity.Movie;
 import com.example.movie.movie.repository.MovieRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 class MovieServiceImplTest {
 
@@ -36,22 +38,30 @@ class MovieServiceImplTest {
     }
 
     @Test
-    void getMovieById() {
-    }
+    void softDeleteDefaultTest(){
+        Movie movie = movieRepository.findById(1L).orElseThrow(
+                () -> new NoSuchElementException("해당하는 영화가 없습니다")
+        );
+        movie.softDeleteMovie();
 
-    @Test
-    void createMovie() {
-    }
-
-    @Test
-    void updateMovie() {
+        movieRepository.save(movie);
+        // 트랜잭션이 커밋되지 않으므로 더티체킹이 일어나지 않는다.
+        // 따라서 명시적으로 save
     }
 
     @Test
     void softDeleteMovie() {
-    }
+        //given
+        Movie movie = movieRepository.findById(1L).orElseThrow(
+                () -> new NoSuchElementException("해당하는 영화가 없습니다")
+        );
+        //when
+        movie.softDeleteMovie();
+        movieRepository.save(movie);
 
-    @Test
-    void deleteMovie() {
+        //then
+        List<MovieResponseDto> movies = movieRepository.getMovies(1L);
+
+        assertEquals(2, movies.get(0).getId());
     }
 }

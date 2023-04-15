@@ -65,6 +65,7 @@ public class MovieServiceImpl implements MovieService{
         Movie movie = movieRepository.findByIdAndInUseIsTrue(movie_id).orElseThrow(
                 () -> new NoSuchElementException("해당하는 영화가 없습니다")
         );
+
         movie.updateMovie(movieRequestDto);
     }
 
@@ -75,7 +76,7 @@ public class MovieServiceImpl implements MovieService{
                 () -> new NoSuchElementException("해당하는 영화가 없습니다")
         );
 
-        movie.softDeleteMovie(movie);
+        movie.softDeleteMovie();
     }
 
     @Override

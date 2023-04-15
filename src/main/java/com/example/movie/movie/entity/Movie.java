@@ -58,7 +58,7 @@ public class Movie {
         this.posterImageUrl = movieRequestDto.getPostImageUrl();
     }
 
-    public void softDeleteMovie(Movie movie){
-        movie.inUse = false;
+    public void softDeleteMovie(){
+        this.inUse = false;
     }
 }
