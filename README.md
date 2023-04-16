@@ -11,7 +11,7 @@
 
 # 과제 : MovieController (기본 기능) API  
 
-
+### HTTP Status code 200 이외 결과들은 오류메시지와 함께 반환됨을 전제했습니다.
 
 ## Q1. GET /api/v1/movies
 
@@ -316,6 +316,8 @@ POST /api/v1/movies
 
 > 영화의 세부 정보를 수정합니다. SELECT 쿼리로 찾아온 후 UPDATE 쿼리가 발생합니다.
 
+- API 경로: `http://localhost:8080/api/v1/movies/{movieId}`
+
 ### 쿼리 예시
 > Hibernate:
 select
@@ -358,8 +360,6 @@ release_date=?
 where
 id=?
 
-- API 경로: `http://localhost:8080/api/v1/movies/{movieId}`
-- HTTP 메서드: PUT
 - 요청 예시:
 
 ````
@@ -372,14 +372,22 @@ id=?
 }
 ````
 
-- 응답:
-  - 성공(200 OK): 영화 수정 성공
-  - 실패(404 Not Found): 해당하는 영화가 없는 경우
+## Q5. DELETE /api/v1/movies/{movie_id}
 
-## 5. 영화 삭제
+● 성공적으로 Entity를 삭제했다면, 어떤 https status code와 결과를 되돌려 줘야
+할까요?
+: 204 NO Content 를 리턴합니다.
+
+● 만약 삭제하려는 Entity가 없는 Entity라면, 어떤 https status code와 결과를 되돌려
+줘야 할까요?
+: 404 NOT Found 를 리턴합니다.
+
+## A5. 영화 삭제
 
 > 영화를 삭제합니다. 연관된 엔티티들(이미지, 비디오) 도 모두 한 쿼리로 삭제됩니다.
 > 해당 영화 조회용 쿼리 1개 + 삭제용 쿼리 3개가 발생합니다. (영화, 영화이미지, 영화비디오)
+
+- API 경로: `http://localhost:8080/api/v1/movies/{movieId}`
 
 ### 쿼리 예시
 
@@ -419,11 +427,6 @@ movie
 where
 id=?
 
-- API 경로: `http://localhost:8080/api/v1/movies/{movieId}`
-- HTTP 메서드: DELETE
-- 응답:
-  - 성공(200 OK): 영화 삭제 성공
-  - 실패(404 Not Found): 해당하는 영화가 없는 경우
 
 ---
 
@@ -432,7 +435,6 @@ id=?
 
 <details>
 <summary>API 상세 설명 및 쿼리</summary>
-
 
 ## 1. 페이징을 통한 영화 조회
 
@@ -473,6 +475,7 @@ m1_0.in_use=?
 ````
 http://localhost:8080/api/v1/movies/pages/3 으로 요청
 -> 21~30 사이 Id 가진 엔티티 조회
+
 [
     {
         "id": 21,
