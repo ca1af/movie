@@ -20,8 +20,8 @@ class MovieServiceImplTest {
     @Test
     void getMovieListPagingTest() {
         //when
-        List<MovieResponseDto> movieList = movieRepository.getMovies(1L);
-        List<MovieResponseDto> movieList2 = movieRepository.getMovies(2L);
+        List<MovieResponseDto> movieList = movieRepository.getMoviesPaging(1L);
+        List<MovieResponseDto> movieList2 = movieRepository.getMoviesPaging(2L);
         //then : 페이징 잘 되고 있는지 확인
         assertEquals(movieList.size(), 10);
         assertEquals(movieList2.size(), 10);
@@ -30,7 +30,7 @@ class MovieServiceImplTest {
     @Test
     void getMoviesFailureTest(){
         //when
-        List<MovieResponseDto> movieList = movieRepository.getMovies(3L);
+        List<MovieResponseDto> movieList = movieRepository.getMoviesPaging(3L);
         //then
         assertEquals(0, movieList.size());
 
@@ -60,7 +60,7 @@ class MovieServiceImplTest {
         movieRepository.save(movie);
 
         //then
-        List<MovieResponseDto> movies = movieRepository.getMovies(1L);
+        List<MovieResponseDto> movies = movieRepository.getMoviesPaging(1L);
 
         assertEquals(2, movies.get(0).getId());
     }

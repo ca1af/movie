@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Comparator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,5 +46,9 @@ public class MovieResponseDto {
 
     public static MovieResponseDto of(Movie movie) {
         return new MovieResponseDto(movie);
+    }
+
+    public static List<MovieResponseDto> toDto(List<Movie> movies){
+        return movies.stream().map(MovieResponseDto::of).collect(Collectors.toList());
     }
 }

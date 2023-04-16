@@ -18,17 +18,7 @@ public class MovieController {
 
     @GetMapping("/api/v1/movies")
     public ResponseEntity<List<MovieResponseDto>> getMoviesDefault() {
-        List<MovieResponseDto> movieList = movieService.getMoviesDefault();
-        if (movieList.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(movieList);
-        }
-    }
-
-    @GetMapping("/api/v1/movies/pages/{pageNum}")
-    public ResponseEntity<List<MovieResponseDto>> getMovies(@PathVariable Long pageNum) {
-        List<MovieResponseDto> movieList = movieService.getMovies(pageNum);
+        List<MovieResponseDto> movieList = movieService.getMovies();
         if (movieList.isEmpty()) {
             return ResponseEntity.noContent().build();
         } else {
@@ -42,6 +32,7 @@ public class MovieController {
     }
 
     //PostMan 등으로 확인만 할거라면...그냥 JSon 형태의 데이터를 보여주는 게 낫나?...
+
     @PostMapping("/api/v1/movies")
     public ResponseEntity<Void> createMovie(@RequestBody MovieRequestDto movieRequestDto){
         MovieResponseDto movie = movieService.createMovie(movieRequestDto);
@@ -52,9 +43,9 @@ public class MovieController {
         return ResponseEntity.created(location).build();
     }
 
-    @PutMapping("/api/v1/movies/{movie_id}")
-    public ResponseEntity<Void> updateMovie(@PathVariable Long movie_id, @RequestBody MovieRequestDto movieRequestDto){
-        movieService.updateMovie(movie_id, movieRequestDto);
+    @PutMapping("/api/v1/movies/{movieId}")
+    public ResponseEntity<Void> updateMovie(@PathVariable Long movieId, @RequestBody MovieRequestDto movieRequestDto){
+        movieService.updateMovie(movieId, movieRequestDto);
         return ResponseEntity.ok().build();
     }
 

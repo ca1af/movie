@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface MovieQueryRepository {
     List<MovieResponseDto> getMoviesDefault();
-    List<MovieResponseDto> getMovies(Long pageNum);
+    List<MovieResponseDto> getMoviesPaging(Long pageNum);
     List<MovieResponseDto> searchMovieByCond(MovieSearchCond movieSearchCond);
     Optional<Movie> findByIdAndInUseIsTrue(Long movieId);
     void deleteMovieById(Long movieId);

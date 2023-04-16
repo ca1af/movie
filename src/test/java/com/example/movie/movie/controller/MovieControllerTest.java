@@ -2,6 +2,7 @@ package com.example.movie.movie.controller;
 
 import com.example.movie.movie.dto.MovieResponseDto;
 import com.example.movie.movie.service.MovieService;
+import com.example.movie.movie.service.MyMovieService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -15,7 +16,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -29,6 +29,8 @@ public class MovieControllerTest {
 
     @MockBean
     private MovieService movieService;
+    @MockBean
+    private MyMovieService myMovieService;
 
     @BeforeEach
     void setUp() {
@@ -43,7 +45,7 @@ public class MovieControllerTest {
         // When
         List<MovieResponseDto> movieList = new ArrayList<>();
 
-        when(movieService.getMovies(pageNum)).thenReturn(movieList);
+        when(myMovieService.getMoviesPaging(pageNum)).thenReturn(movieList);
 
         // Then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/movies/pages/{pageNum}", pageNum)
@@ -51,7 +53,7 @@ public class MovieControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isNoContent())
                 .andReturn();
 
-        verify(movieService, times(1)).getMovies(pageNum);
+        verify(myMovieService, times(1)).getMoviesPaging(pageNum);
     }
 
     @Test
@@ -65,7 +67,7 @@ public class MovieControllerTest {
             movieList.add(movie);
         }
 
-        when(movieService.getMoviesDefault()).thenReturn(movieList);
+        when(movieService.getMovies()).thenReturn(movieList);
 
         // When
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/movies")
@@ -74,14 +76,14 @@ public class MovieControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(20));
 
         // Then
-        verify(movieService, times(1)).getMoviesDefault();
+        verify(movieService, times(1)).getMovies();
     }
 
 
     @Test
     void getMoviesDefaultTestNoContent() throws Exception {
         List<MovieResponseDto> movieList = new ArrayList<>();
-        when(movieService.getMoviesDefault()).thenReturn(movieList);
+        when(movieService.getMovies()).thenReturn(movieList);
 
         // When
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/movies")
@@ -89,6 +91,6 @@ public class MovieControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
 
         // Then
-        verify(movieService, times(1)).getMoviesDefault();
+        verify(movieService, times(1)).getMovies();
     }
 }

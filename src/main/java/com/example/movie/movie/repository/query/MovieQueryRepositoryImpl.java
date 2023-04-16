@@ -54,11 +54,11 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
                 .where(movie.inUse.eq(true))
                 .fetch();
 
-        return movieList.stream().map(MovieResponseDto::of).collect(Collectors.toList());
+        return MovieResponseDto.toDto(movieList);
     }
 
     @Override
-    public List<MovieResponseDto> getMovies(Long pageNum) {
+    public List<MovieResponseDto> getMoviesPaging(Long pageNum) {
         int pageSize = 10;
         long offset = (pageNum - 1) * pageSize;
 
@@ -71,7 +71,7 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
                 .limit(pageSize)
                 .fetch();
 
-        return movieList.stream().map(MovieResponseDto::of).collect(Collectors.toList());
+        return MovieResponseDto.toDto(movieList);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
                         movie.inUse.eq(true))
                 .fetch();
 
-        return movieList.stream().map(MovieResponseDto::of).collect(Collectors.toList());
+        return MovieResponseDto.toDto(movieList);
     }
 
     @Override

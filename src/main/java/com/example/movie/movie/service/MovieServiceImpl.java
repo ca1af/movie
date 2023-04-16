@@ -4,34 +4,21 @@ import com.example.movie.movie.dto.MovieRequestDto;
 import com.example.movie.movie.dto.MovieResponseDto;
 import com.example.movie.movie.entity.Movie;
 import com.example.movie.movie.repository.MovieRepository;
-import com.example.movie.movie.repository.query.MovieSearchCond;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-public class MovieServiceImpl implements MovieService{
+public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository movieRepository;
 
     @Override
-    public List<MovieResponseDto> getMoviesDefault() {
+    public List<MovieResponseDto> getMovies() {
         return movieRepository.getMoviesDefault();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<MovieResponseDto> getMovies(Long pageNum) {
-        return movieRepository.getMovies(pageNum);
-    }
-
-    @Override
-    public List<MovieResponseDto> getMoviesBySearchCond(MovieSearchCond movieSearchCond) {
-        return movieRepository.searchMovieByCond(movieSearchCond);
     }
 
     @Override
@@ -40,8 +27,6 @@ public class MovieServiceImpl implements MovieService{
         Movie movie = movieRepository.findByIdAndInUseIsTrue(movieId).orElseThrow(
                 () -> new NoSuchElementException("해당하는 영화를 찾을 수 없습니다")
         );
-
-//        Movie movie2 = movieRepository.findById(movieId).orElseThrow(() -> new NoSuchElementException("해당하는 영화를 찾을 수 없습니다"));
 
         return MovieResponseDto.of(movie);
     }
@@ -65,23 +50,14 @@ public class MovieServiceImpl implements MovieService{
 
     @Override
     @Transactional
-    public void updateMovie(Long movie_id, MovieRequestDto movieRequestDto) {
-        Movie movie = movieRepository.findByIdAndInUseIsTrue(movie_id).orElseThrow(
+    public void updateMovie(Long movieId, MovieRequestDto movieRequestDto) {
+        Movie movie = movieRepository.findByIdAndInUseIsTrue(movieId).orElseThrow(
                 () -> new NoSuchElementException("해당하는 영화가 없습니다")
         );
 
         movie.updateMovie(movieRequestDto);
     }
 
-    @Override
-    @Transactional
-    public void softDeleteMovie(Long movie_id) {
-        Movie movie = movieRepository.findByIdAndInUseIsTrue(movie_id).orElseThrow(
-                () -> new NoSuchElementException("해당하는 영화가 없습니다")
-        );
-
-        movie.softDeleteMovie();
-    }
 
     @Override
     @Transactional
