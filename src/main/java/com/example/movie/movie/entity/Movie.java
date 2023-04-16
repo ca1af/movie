@@ -18,7 +18,7 @@ public class Movie {
     @Column(nullable = false)
     private Long releaseDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String movieName;
 
     @Column(nullable = false)

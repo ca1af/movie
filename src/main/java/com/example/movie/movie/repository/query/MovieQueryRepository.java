@@ -10,6 +10,9 @@ public interface MovieQueryRepository {
     List<MovieResponseDto> getMoviesDefault();
     List<MovieResponseDto> getMoviesPaging(Long pageNum);
     List<MovieResponseDto> searchMovieByCond(MovieSearchCond movieSearchCond);
+
+    boolean existsByMovieName(String movieName);
+
     Optional<Movie> findByIdAndInUseIsTrue(Long movieId);
     void deleteMovieById(Long movieId);
 

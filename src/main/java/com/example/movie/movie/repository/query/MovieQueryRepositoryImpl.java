@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.example.movie.movie.entity.QMovie.movie;
 import static com.example.movie.movie.entity.QMovieImage.movieImage;
@@ -29,6 +28,13 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
 
     private BooleanExpression searchByDirector(String director) {
         return Objects.nonNull(director) ? movie.director.contains(director) : null;
+    }
+    @Override
+    public boolean existsByMovieName(String movieName){
+        return jpaQueryFactory.selectOne()
+                .from(movie)
+                .where(movie.movieName.eq(movieName))
+                .fetchOne() != null;
     }
 
     @Override

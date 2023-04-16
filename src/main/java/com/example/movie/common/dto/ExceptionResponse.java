@@ -19,10 +19,9 @@ public class ExceptionResponse {
      * @param status  오류 상태 코드
      */
     @Builder
-    public ExceptionResponse(int status, String error, int code, String message) {
+    public ExceptionResponse(int status, String error, String message) {
         this.status = status;
         this.error = error;
-        this.code = code;
         this.message = message;
     }
 }

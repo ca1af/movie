@@ -5,6 +5,7 @@ import com.example.movie.movie.dto.MovieResponseDto;
 import com.example.movie.movie.entity.Movie;
 import com.example.movie.movie.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -34,6 +35,11 @@ public class MovieServiceImpl implements MovieService {
     @Override
     @Transactional
     public MovieResponseDto createMovie(MovieRequestDto movieRequestDto) {
+        String movieName = movieRequestDto.getMovieName();
+
+        if (movieRepository.existsByMovieName(movieName)) {
+            throw new DataIntegrityViolationException("중복된 영화이름이 이미 존재합니다.");
+        }
 
         Movie movie = Movie.builder()
                 .movieName(movieRequestDto.getMovieName())
@@ -42,8 +48,6 @@ public class MovieServiceImpl implements MovieService {
                 .posterImageUrl(movieRequestDto.getPostImageUrl())
                 .releaseDate(movieRequestDto.getReleaseDate())
                 .build();
-
-        movieRepository.save(movie);
 
         return MovieResponseDto.of(movie);
     }

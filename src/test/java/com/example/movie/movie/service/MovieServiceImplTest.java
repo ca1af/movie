@@ -64,4 +64,21 @@ class MovieServiceImplTest {
 
         assertEquals(2, movies.get(0).getId());
     }
+
+    @Test
+    void postMovieUniqueViolenceTest(){
+        // given
+        Movie movie = Movie.builder()
+                .releaseDate(1L)
+                .posterImageUrl("poster_")
+                .movieName("Movie " + "1")
+                .director("Director ")
+                .genre("Genre ")
+                .build();
+        // when
+        movieRepository.save(movie);
+
+        //then
+
+    }
 }

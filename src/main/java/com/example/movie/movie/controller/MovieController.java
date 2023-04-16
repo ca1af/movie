@@ -5,6 +5,7 @@ import com.example.movie.movie.dto.MovieResponseDto;
 import com.example.movie.movie.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -34,7 +35,7 @@ public class MovieController {
     //PostMan 등으로 확인만 할거라면...그냥 JSon 형태의 데이터를 보여주는 게 낫나?...
 
     @PostMapping("/api/v1/movies")
-    public ResponseEntity<Void> createMovie(@RequestBody MovieRequestDto movieRequestDto){
+    public ResponseEntity<Void> createMovie(@RequestBody @Validated() MovieRequestDto movieRequestDto){
         MovieResponseDto movie = movieService.createMovie(movieRequestDto);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
