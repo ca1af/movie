@@ -3,6 +3,7 @@ package com.example.movie.movie.controller;
 import com.example.movie.movie.dto.MovieRequestDto;
 import com.example.movie.movie.dto.MovieResponseDto;
 import com.example.movie.movie.service.MovieService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -35,7 +36,7 @@ public class MovieController {
     //PostMan 등으로 확인만 할거라면...그냥 JSon 형태의 데이터를 보여주는 게 낫나?...
 
     @PostMapping("/api/v1/movies")
-    public ResponseEntity<Void> createMovie(@RequestBody @Validated() MovieRequestDto movieRequestDto){
+    public ResponseEntity<Void> createMovie(@RequestBody @Valid MovieRequestDto movieRequestDto){
         MovieResponseDto movie = movieService.createMovie(movieRequestDto);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -45,7 +46,7 @@ public class MovieController {
     }
 
     @PutMapping("/api/v1/movies/{movieId}")
-    public ResponseEntity<Void> updateMovie(@PathVariable Long movieId, @RequestBody MovieRequestDto movieRequestDto){
+    public ResponseEntity<Void> updateMovie(@PathVariable Long movieId, @RequestBody @Valid MovieRequestDto movieRequestDto){
         movieService.updateMovie(movieId, movieRequestDto);
         return ResponseEntity.ok().build();
     }
