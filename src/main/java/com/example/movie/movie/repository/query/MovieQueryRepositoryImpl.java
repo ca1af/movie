@@ -4,9 +4,7 @@ import com.example.movie.movie.dto.MovieResponseDto;
 import com.example.movie.movie.entity.Movie;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
