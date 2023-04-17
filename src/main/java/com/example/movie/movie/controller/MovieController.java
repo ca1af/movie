@@ -6,7 +6,6 @@ import com.example.movie.movie.service.MovieService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -51,9 +50,9 @@ public class MovieController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/api/v1/movies/{movie_id}")
-    public ResponseEntity<Void> deleteMovie(@PathVariable Long movie_id){
-        movieService.deleteMovie(movie_id);
+    @DeleteMapping("/api/v1/movies/{movieId}")
+    public ResponseEntity<Void> deleteMovie(@PathVariable Long movieId){
+        movieService.deleteMovie(movieId);
         return ResponseEntity.noContent().build();
     }
 }

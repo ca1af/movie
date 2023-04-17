@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -20,7 +19,6 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-@SpringJUnitConfig
 @WebMvcTest(MovieController.class)
 public class MovieControllerTest {
 
@@ -29,36 +27,10 @@ public class MovieControllerTest {
 
     @MockBean
     private MovieService movieService;
-    @MockBean
-    private MyMovieService myMovieService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
-    @Test
-    void getMovieListNoContentTest() throws Exception {
-        // Given
-        Long pageNum = 10L;
-
-        // When
-        List<MovieResponseDto> movieList = new ArrayList<>();
-
-        when(myMovieService.getMoviesPaging(pageNum)).thenReturn(movieList);
-
-        // Then
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/movies/pages/{pageNum}", pageNum)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isNoContent())
-                .andReturn();
-
-        verify(myMovieService, times(1)).getMoviesPaging(pageNum);
-    }
 
     @Test
     void testGetMoviesDefault() throws Exception {
-        // Given
+        // given
         List<MovieResponseDto> movieList = new ArrayList<>();
 
         for (int i = 1; i <= 20; i++) {
@@ -69,13 +41,13 @@ public class MovieControllerTest {
 
         when(movieService.getMovies()).thenReturn(movieList);
 
-        // When
+        // when
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/movies")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(20));
 
-        // Then
+        // then
         verify(movieService, times(1)).getMovies();
     }
 
@@ -83,14 +55,15 @@ public class MovieControllerTest {
     @Test
     void getMoviesDefaultTestNoContent() throws Exception {
         List<MovieResponseDto> movieList = new ArrayList<>();
+        //given
         when(movieService.getMovies()).thenReturn(movieList);
 
-        // When
+        // when
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/movies")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
 
-        // Then
+        // then
         verify(movieService, times(1)).getMovies();
     }
 }

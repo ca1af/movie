@@ -4,8 +4,11 @@ import com.example.movie.movie.dto.MovieResponseDto;
 import com.example.movie.movie.entity.Movie;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -65,8 +68,25 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
 
     @Override
     public List<MovieResponseDto> getMoviesPaging(Long pageNum) {
+
         int pageSize = 10;
+
+        pageNum = Math.max(pageNum, 1L);
+
         long offset = (pageNum - 1) * pageSize;
+
+        offset = Math.max(offset, 0L);
+
+        Integer one = jpaQueryFactory.selectOne()
+                .from(movie)
+                .where(movie.id.between(offset, offset + 10))
+                .fetchOne();
+
+        List<MovieResponseDto> nullPointHandler = new ArrayList<>();
+
+        if (one == null){
+            return nullPointHandler;
+        }
 
         List<Movie> movieList = jpaQueryFactory
                 .selectFrom(movie)
@@ -79,6 +99,7 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
 
         return MovieResponseDto.toDto(movieList);
     }
+
 
     @Override
     public List<MovieResponseDto> searchMovieByCond(MovieSearchCond movieSearchCond) {

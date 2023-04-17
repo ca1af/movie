@@ -12,7 +12,9 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class MyMovieController {
+
     private final MyMovieService movieService;
+
     @GetMapping("/api/v1/movies/pages/{pageNum}")
     public ResponseEntity<List<MovieResponseDto>> getMoviesPaging(@PathVariable Long pageNum) {
         List<MovieResponseDto> movieList = movieService.getMoviesPaging(pageNum);
