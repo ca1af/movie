@@ -25,7 +25,7 @@ public class MyMovieController {
         }
     }
 
-    @GetMapping("/api/v1/movies/cond") // cond?
+    @GetMapping("/api/v1/movies/search") // cond?
     public ResponseEntity<List<MovieResponseDto>> moviesBySearchCond(@RequestBody MovieSearchCond movieSearchCond){
         List<MovieResponseDto> movieList = movieService.getMoviesBySearchCond(movieSearchCond);
         if (movieList.isEmpty()) {

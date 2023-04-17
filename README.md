@@ -550,7 +550,7 @@ m1_0.movie_name like ? escape '!'
 and m1_0.in_use=?
 
 
-- API 경로 : 'http://localhost:8080/api/v1/movies/pages/{pageNum}'
+- API 경로 : 'http://localhost:8080/api/v1/movies/search'
 - HTTP 매서드 : GET
 - 요청 예시
 ````
