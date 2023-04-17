@@ -28,7 +28,6 @@ public class DummyDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Create dummy data for movies
         List<Movie> movies = IntStream.rangeClosed(1, 20)
                 .mapToObj(i -> Movie.builder()
                         .releaseDate((long) i)
@@ -41,7 +40,6 @@ public class DummyDataLoader implements CommandLineRunner {
 
         movieRepository.saveAll(movies);
 
-        // Create dummy data for MovieImages
         List<MovieImage> movieImages = new ArrayList<>();
         for (Movie movie : movies) {
             for (int i = 1; i <= 5; i++) {
@@ -56,7 +54,6 @@ public class DummyDataLoader implements CommandLineRunner {
         }
         movieImageRepository.saveAll(movieImages);
 
-        // Create dummy data for MovieVideos
         List<MovieVideo> movieVideos = new ArrayList<>();
         for (Movie movie : movies) {
             for (int i = 1; i <= 3; i++) {

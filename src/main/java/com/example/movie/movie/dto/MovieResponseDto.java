@@ -1,7 +1,6 @@
 package com.example.movie.movie.dto;
 
 import com.example.movie.movie.entity.Movie;
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -22,6 +22,7 @@ public class MyMovieServiceImpl implements MyMovieService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MovieResponseDto> getMoviesBySearchCond(MovieSearchCond movieSearchCond) {
         return movieRepository.searchMovieByCond(movieSearchCond);
     }
