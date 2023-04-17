@@ -574,7 +574,8 @@ and m1_0.in_use=?
 - 응답:
   - 성공(200 OK): 영화 목록 조회 결과를 담은 MovieResponseDto 리스트
   - 실패(400 BAD REQUEST): RequestBody 형태의 Json 데이터가 올바르지 않은 경우
-
+  - 실패(204 No Content): 조회된 영화 목록이 없는 경우
+  
 # 3. 논리 삭제
 
 > Movie 엔티티에 설정한 inUse 테이블을 이용해서, 논리 삭제합니다.
