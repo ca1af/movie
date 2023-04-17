@@ -8,7 +8,6 @@ public class ExceptionResponse {
 
     private int status;
     private String error;
-    private int code;
     private String message;
 
 
