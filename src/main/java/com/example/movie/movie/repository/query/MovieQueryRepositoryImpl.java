@@ -128,15 +128,15 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
         // N+1 delete 를 막기 위해. Native query 로 한번에 가능하지만, 위험하므로 아래와 같이 작성
         if (foundMovie != null) {
             jpaQueryFactory.delete(movieVideo)
-                    .where(movieVideo.movie.eq(movie))
+                    .where(movieVideo.movie.id.eq(movieId))
                     .execute();
 
             jpaQueryFactory.delete(movieImage)
-                    .where(movieImage.movie.eq(movie))
+                    .where(movieImage.movie.id.eq(movieId))
                     .execute();
 
             jpaQueryFactory.delete(castMember)
-                            .where(castMember.movie.eq(movie))
+                            .where(castMember.movie.id.eq(movieId))
                                     .execute();
 
             // Movie 엔티티 삭제

@@ -53,6 +53,8 @@ public class MovieServiceImpl implements MovieService {
                 .originalTitle(movieRequestDto.getOriginalTitle())
                 .build();
 
+        movieRepository.save(movie);
+
         return MovieResponseDto.of(movie);
     }
 

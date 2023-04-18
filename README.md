@@ -16,6 +16,16 @@
 - Java 17, SpringBoot 3.0.5 사용했으며 build.gradle 파일에 저장되어 별도의 설정이 필요 없습니다. 다만 SDK(17)의 경우 프로젝트 빌드를 위해 설치되어야 합니다.
 
 
+---
+# 테이블과 연관관계에 대해서
+
+- Movie 테이블에 연결되어 있는 테이블은 MovieImage, MovieVideo, CastMember 테이블이 있습니다.
+- Movie 엔티티의 필드에 넣지 않고 연관관계를 설정하여 다른 테이블로 빼놓은 이유는 데이터 베이스의 정규화를 위함입니다.
+- 객체의 관점에서 보더라도, 이미지나 비디오는 확장의 가능성이 있으므로 다른 테이블에 놓는 것이 유리하다고 판단했습니다.
+
+---
+
+
 # 과제 : MovieController (기본 기능) API  
 
 ### HTTP Status code 200번대 이외 결과들은 오류메시지와 함께 반환됨을 전제했습니다.
@@ -35,6 +45,8 @@
     LEFT JOIN movie_video mv
 
     ON m.id = mv.movie_id
+    LEFT JOIN cast_member cm
+    ON m.id = cm.movie_id
     WHERE INUSE = TRUE (논리 삭제를 위해 검색 조건 설정했습니다.)
 
 - 추가기능으로 페이징 조회 쿼리가 구현되어 있습니다.
@@ -44,6 +56,7 @@
     FROM movie m
     LEFT JOIN movie_image mi ON m.id = mi.movie_id
     LEFT JOIN movie_video mv ON m.id = mv.movie_id
+    LEFT JOIN cast_member cm ON m.id = cm.movie_id
     WHERE m.in_use = true
     OFFSET 0
     LIMIT 10
@@ -56,61 +69,76 @@
 - JSON DATA 예시
   
 ````
-[
-{
-"id": 1,
-"releaseDate": 1,
-"movieName": "Movie 1",
-"genre": "Genre 1",
-"director": "Director 1",
-"postImageUrl": "poster_1",
-"movieImages": [
-{
-"id": 1,
-"imageUrl": "image_1_for_movie_1",
-"movieId": 1
-},
-{
-"id": 2,
-"imageUrl": "image_2_for_movie_1",
-"movieId": 1
-},
-{
-"id": 3,
-"imageUrl": "image_3_for_movie_1",
-"movieId": 1
-},
-{
-"id": 4,
-"imageUrl": "image_4_for_movie_1",
-"movieId": 1
-},
-{
-"id": 5,
-"imageUrl": "image_5_for_movie_1",
-"movieId": 1
-}
-],
-"movieVideos": [
-{
-"id": 1,
-"videoUrl": "video_1_for_movie_1",
-"movieId": 1
-},
-{
-"id": 2,
-"videoUrl": "video_2_for_movie_1",
-"movieId": 1
-},
-{
-"id": 3,
-"videoUrl": "video_3_for_movie_1",
-"movieId": 1
-}
-]
-},
-...
-]
+
+    {
+        "id": 1,
+        "releaseDate": 1,
+        "movieName": "Movie 1",
+        "genre": "Genre 1",
+        "director": "Director 1",
+        "postImageUrl": "poster_1",
+        "movieImages": [
+            {
+                "id": 1,
+                "imageUrl": "image_1_for_movie_1",
+                "movieId": 1
+            },
+            {
+                "id": 2,
+                "imageUrl": "image_2_for_movie_1",
+                "movieId": 1
+            },
+            {
+                "id": 3,
+                "imageUrl": "image_3_for_movie_1",
+                "movieId": 1
+            },
+            {
+                "id": 4,
+                "imageUrl": "image_4_for_movie_1",
+                "movieId": 1
+            },
+            {
+                "id": 5,
+                "imageUrl": "image_5_for_movie_1",
+                "movieId": 1
+            }
+        ],
+        "movieVideos": [
+            {
+                "id": 1,
+                "videoUrl": "video_1_for_movie_1",
+                "movieId": 1
+            },
+            {
+                "id": 2,
+                "videoUrl": "video_2_for_movie_1",
+                "movieId": 1
+            },
+            {
+                "id": 3,
+                "videoUrl": "video_3_for_movie_1",
+                "movieId": 1
+            }
+        ],
+        "castMembers": [
+            {
+                "id": 1,
+                "movieId": 1,
+                "memberName": "Cast Member 1"
+            },
+            {
+                "id": 2,
+                "movieId": 1,
+                "memberName": "Cast Member 2"
+            },
+            {
+                "id": 3,
+                "movieId": 1,
+                "memberName": "Cast Member 3"
+            }
+        ]
+    },
 ````
 
 ● 만약 Query를 던졌는데 내용이 없다면 어떤 https status code와 결과를 되돌려 줘야
@@ -126,11 +154,15 @@
 
 ### 쿼리 예시
 
->    select
+> Hibernate:
+select
 m1_0.id,
+c1_0.movie_id,
+c1_0.id,
+c1_0.member_name,
 m1_0.director,
 m1_0.genre,
-m1_0.in_use,M
+m1_0.in_use,
 m2_0.movie_id,
 m2_0.id,
 m2_0.image_url,
@@ -138,8 +170,11 @@ m1_0.movie_name,
 m3_0.movie_id,
 m3_0.id,
 m3_0.video_url,
+m1_0.original_title,
 m1_0.poster_image_url,
-m1_0.release_date
+m1_0.release_date,
+m1_0.running_time,
+m1_0.synopsis
 from
 movie m1_0
 left join
@@ -148,6 +183,9 @@ on m1_0.id=m2_0.movie_id
 left join
 movie_video m3_0
 on m1_0.id=m3_0.movie_id
+left join
+cast_member c1_0
+on m1_0.id=c1_0.movie_id
 where
 m1_0.in_use=?
 
@@ -160,54 +198,71 @@ m1_0.in_use=?
 
 ````
 {
-    "id": 3,
-    "releaseDate": 3,
-    "movieName": "Movie 3",
-    "genre": "Genre 3",
-    "director": "Director 3",
-    "postImageUrl": "poster_3",
+    "id": 1,
+    "releaseDate": 1,
+    "movieName": "Movie 1",
+    "genre": "Genre 1",
+    "director": "Director 1",
+    "postImageUrl": "poster_1",
     "movieImages": [
         {
-            "id": 11,
-            "imageUrl": "image_1_for_movie_3",
-            "movieId": 3
+            "id": 1,
+            "imageUrl": "image_1_for_movie_1",
+            "movieId": 1
         },
         {
-            "id": 12,
-            "imageUrl": "image_2_for_movie_3",
-            "movieId": 3
+            "id": 2,
+            "imageUrl": "image_2_for_movie_1",
+            "movieId": 1
         },
         {
-            "id": 13,
-            "imageUrl": "image_3_for_movie_3",
-            "movieId": 3
+            "id": 3,
+            "imageUrl": "image_3_for_movie_1",
+            "movieId": 1
         },
         {
-            "id": 14,
-            "imageUrl": "image_4_for_movie_3",
-            "movieId": 3
+            "id": 4,
+            "imageUrl": "image_4_for_movie_1",
+            "movieId": 1
         },
         {
-            "id": 15,
-            "imageUrl": "image_5_for_movie_3",
-            "movieId": 3
+            "id": 5,
+            "imageUrl": "image_5_for_movie_1",
+            "movieId": 1
         }
     ],
     "movieVideos": [
         {
-            "id": 7,
-            "videoUrl": "video_1_for_movie_3",
-            "movieId": 3
+            "id": 1,
+            "videoUrl": "video_1_for_movie_1",
+            "movieId": 1
         },
         {
-            "id": 8,
-            "videoUrl": "video_2_for_movie_3",
-            "movieId": 3
+            "id": 2,
+            "videoUrl": "video_2_for_movie_1",
+            "movieId": 1
         },
         {
-            "id": 9,
-            "videoUrl": "video_3_for_movie_3",
-            "movieId": 3
+            "id": 3,
+            "videoUrl": "video_3_for_movie_1",
+            "movieId": 1
+        }
+    ],
+    "castMembers": [
+        {
+            "id": 1,
+            "movieId": 1,
+            "memberName": "Cast Member 1"
+        },
+        {
+            "id": 2,
+            "movieId": 1,
+            "memberName": "Cast Member 2"
+        },
+        {
+            "id": 3,
+            "movieId": 1,
+            "memberName": "Cast Member 3"
         }
     ]
 }
@@ -225,8 +280,12 @@ m1_0.in_use=?
 
 ### 쿼리 예시
 
->    select
+> Hibernate:
+select
 m1_0.id,
+c1_0.movie_id,
+c1_0.id,
+c1_0.member_name,
 m1_0.director,
 m1_0.genre,
 m1_0.in_use,
@@ -237,8 +296,11 @@ m1_0.movie_name,
 m2_0.movie_id,
 m2_0.id,
 m2_0.video_url,
+m1_0.original_title,
 m1_0.poster_image_url,
-m1_0.release_date
+m1_0.release_date,
+m1_0.running_time,
+m1_0.synopsis
 from
 movie m1_0
 left join
@@ -247,9 +309,13 @@ on m1_0.id=m2_0.movie_id
 left join
 movie_image m3_0
 on m1_0.id=m3_0.movie_id
+left join
+cast_member c1_0
+on m1_0.id=c1_0.movie_id
 where
 m1_0.in_use=?
 and m1_0.id=?
+
 
 ## Q3. POST /api/v1/movies
 
@@ -257,13 +323,17 @@ and m1_0.id=?
   : Json Body 이용해서 요청합니다.
 
 ````
+
 POST /api/v1/movies
 {
-  "releaseDate": 0,
-  "movieName": "DummyName",
-  "genre": "DummyGenre",
-  "director": "DummyDirector",
-  "postImageUrl": "DummyUrl"
+  "releaseDate": 1234567890,
+  "movieName": "영화 제목",
+  "genre": "장르",
+  "director": "감독",
+  "postImageUrl": "포스터 이미지 URL",
+  "originalTitle": "원제",
+  "runningTime": 120,
+  "synopsis": "시놉시스"
 }
 
 ````
@@ -281,17 +351,27 @@ POST /api/v1/movies
 
 ## A3. 영화 생성
 
-> 영화를 생성합니다.
+> 영화를 생성합니다. 먼저 중복 체크를 위해 exist 쿼리를 날린 후 처리합니다.
 
 - API 경로: `http://localhost:8080/api/v1/movies`
 
 ### 쿼리 예시
->     insert 
-    into
-        movie
-        (id, director, genre, in_use, movie_name, poster_image_url, release_date) 
-    values
-        (default, ?, ?, ?, ?, ?, ?)
+> select
+1
+from
+movie m1_0
+where
+m1_0.movie_name=?
+
+
+> Hibernate:
+insert
+into
+movie
+(id, director, genre, in_use, movie_name, original_title, poster_image_url, release_date, running_time, synopsis)
+values
+(default, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+
 
 - API 경로: `http://localhost:8080/api/v1/movies`
 - HTTP 메서드: POST
@@ -300,12 +380,16 @@ POST /api/v1/movies
 ````
 POST /api/v1/movies
 {
-  "releaseDate": 0,
-  "movieName": "DummyName",
-  "genre": "DummyGenre",
-  "director": "DummyDirector",
-  "postImageUrl": "DummyUrl"
+  "releaseDate": 1234567890,
+  "movieName": "영화 제목125125",
+  "genre": "장르",
+  "director": "감독",
+  "postImageUrl": "포스터 이미지 URL",
+  "originalTitle": "원제",
+  "runningTime": 120,
+  "synopsis": "시놉시스"
 }
+
 
 ````
 
@@ -329,6 +413,9 @@ POST /api/v1/movies
 > Hibernate:
 select
 m1_0.id,
+c1_0.movie_id,
+c1_0.id,
+c1_0.member_name,
 m1_0.director,
 m1_0.genre,
 m1_0.in_use,
@@ -339,8 +426,11 @@ m1_0.movie_name,
 m2_0.movie_id,
 m2_0.id,
 m2_0.video_url,
+m1_0.original_title,
 m1_0.poster_image_url,
-m1_0.release_date
+m1_0.release_date,
+m1_0.running_time,
+m1_0.synopsis
 from
 movie m1_0
 left join
@@ -349,6 +439,9 @@ on m1_0.id=m2_0.movie_id
 left join
 movie_image m3_0
 on m1_0.id=m3_0.movie_id
+left join
+cast_member c1_0
+on m1_0.id=c1_0.movie_id
 where
 m1_0.in_use=?
 and m1_0.id=?
@@ -362,21 +455,29 @@ director=?,
 genre=?,
 in_use=?,
 movie_name=?,
+original_title=?,
 poster_image_url=?,
-release_date=?
+release_date=?,
+running_time=?,
+synopsis=?
 where
 id=?
+
 
 - 요청 예시:
 
 ````
 {
-  "releaseDate": 0,
-  "movieName": "DummyName",
-  "genre": "DummyGenre",
-  "director": "DummyDirector",
-  "postImageUrl": "DummyUrl"
+  "releaseDate": 1234567890,
+  "movieName": "수정 제목",
+  "genre": "수정 장르",
+  "director": "수정 감독",
+  "postImageUrl": "수정 포스터 이미지 URL",
+  "originalTitle": "수정 원제",
+  "runningTime": 120,
+  "synopsis": "수정 시놉시스"
 }
+
 ````
 
 ## Q5. DELETE /api/v1/movies/{movie_id}
@@ -392,7 +493,7 @@ id=?
 ## A5. 영화 삭제
 
 > 영화를 삭제합니다. 연관된 엔티티들(이미지, 비디오) 도 모두 한 쿼리로 삭제됩니다.
-> 해당 영화 조회용 쿼리 1개 + 삭제용 쿼리 3개가 발생합니다. (영화, 영화이미지, 영화비디오)
+> 해당 영화 조회용 쿼리 1개 + 삭제용 쿼리 3개가 발생합니다. (영화, 영화이미지, 영화비디오, 캐스트멤버(출연진))
 
 - API 경로: `http://localhost:8080/api/v1/movies/{movieId}`
 
@@ -430,6 +531,14 @@ movie_id=movie_id
 > Hibernate:
 delete
 from
+cast_member
+where
+movie_id=movie_id
+
+
+> Hibernate:
+delete
+from
 movie
 where
 id=?
@@ -442,11 +551,25 @@ id=?
 ## 1. 페이징을 통한 영화 조회
 
 > 페이징을 통해서 10개씩 영화를 조회합니다.
+> 해당하는 페이지의 인덱스가 있는지 확인하고, 인덱스가 하나도 존재하지 않는다면 리턴하는 배열을 새 배열로 초기화해서 204 No content 를 리턴합니다.
 
 ### 쿼리 예시
 
-> select
+> Hibernate:
+select
+1
+from
+movie m1_0
+where
+m1_0.id between ? and ?
+
+
+> Hibernate:
+select
 m1_0.id,
+c1_0.movie_id,
+c1_0.id,
+c1_0.member_name,
 m1_0.director,
 m1_0.genre,
 m1_0.in_use,
@@ -457,8 +580,11 @@ m1_0.movie_name,
 m3_0.movie_id,
 m3_0.id,
 m3_0.video_url,
+m1_0.original_title,
 m1_0.poster_image_url,
-m1_0.release_date
+m1_0.release_date,
+m1_0.running_time,
+m1_0.synopsis
 from
 movie m1_0
 left join
@@ -467,6 +593,9 @@ on m1_0.id=m2_0.movie_id
 left join
 movie_video m3_0
 on m1_0.id=m3_0.movie_id
+left join
+cast_member c1_0
+on m1_0.id=c1_0.movie_id
 where
 m1_0.in_use=?
 
@@ -482,34 +611,27 @@ http://localhost:8080/api/v1/movies/pages/3 으로 요청
 [
     {
         "id": 21,
-        "releaseDate": 0,
-        "movieName": "DummyName",
-        "genre": "DummyGenre",
-        "director": "DummyDirector",
-        "postImageUrl": "DummyUrl",
+        "releaseDate": 1234567890,
+        "movieName": "영화 제목1125",
+        "genre": "장르",
+        "director": "감독",
+        "postImageUrl": "포스터 이미지 URL",
         "movieImages": [],
-        "movieVideos": []
+        "movieVideos": [],
+        "castMembers": []
     },
     {
         "id": 22,
-        "releaseDate": 0,
-        "movieName": "DummyName",
-        "genre": "DummyGenre",
-        "director": "DummyDirector",
-        "postImageUrl": "DummyUrl",
+        "releaseDate": 1234567890,
+        "movieName": "영화 제목112",
+        "genre": "장르",
+        "director": "감독",
+        "postImageUrl": "포스터 이미지 URL",
         "movieImages": [],
-        "movieVideos": []
-    },
-    {
-        "id": 23,
-        "releaseDate": 0,
-        "movieName": "DummyName",
-        "genre": "DummyGenre",
-        "director": "DummyDirector",
-        "postImageUrl": "DummyUrl",
-        "movieImages": [],
-        "movieVideos": []
+        "movieVideos": [],
+        "castMembers": []
     }
+]
 ]
 
 ````
@@ -545,6 +667,9 @@ on m1_0.id=m2_0.movie_id
 left join
 movie_video m3_0
 on m1_0.id=m3_0.movie_id
+left join
+cast_member c1_0
+on m1_0.id=c1_0.movie_id
 where
 m1_0.movie_name like ? escape '!'
 and m1_0.in_use=?
@@ -607,6 +732,9 @@ on m1_0.id=m2_0.movie_id
 left join
 movie_image m3_0
 on m1_0.id=m3_0.movie_id
+left join
+cast_member c1_0
+on m1_0.id=c1_0.movie_id
 where
 m1_0.in_use=?
 and m1_0.id=?
