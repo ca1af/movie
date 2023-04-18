@@ -14,6 +14,7 @@ import java.util.Optional;
 import static com.example.movie.movie.entity.QMovie.movie;
 import static com.example.movie.movie.entity.QMovieImage.movieImage;
 import static com.example.movie.movie.entity.QMovieVideo.movieVideo;
+import static com.example.movie.movie.entity.QCastMember.castMember;
 
 @Repository
 public class MovieQueryRepositoryImpl implements MovieQueryRepository {
@@ -45,6 +46,7 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
                         .selectFrom(movie)
                         .leftJoin(movie.movieVideos, movieVideo).fetchJoin()
                         .leftJoin(movie.movieImages, movieImage).fetchJoin()
+                        .leftJoin(movie.castMembers, castMember).fetchJoin()
                         .where(movie.inUse.eq(true),
                                 movie.id.eq(movieId))
                         .fetchOne()
@@ -58,6 +60,7 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
                 .selectFrom(movie)
                 .leftJoin(movie.movieImages, movieImage).fetchJoin()
                 .leftJoin(movie.movieVideos, movieVideo).fetchJoin()
+                .leftJoin(movie.castMembers, castMember).fetchJoin()
                 .where(movie.inUse.eq(true))
                 .fetch();
 
@@ -90,6 +93,7 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
                 .selectFrom(movie)
                 .leftJoin(movie.movieImages, movieImage).fetchJoin()
                 .leftJoin(movie.movieVideos, movieVideo).fetchJoin()
+                .leftJoin(movie.castMembers, castMember).fetchJoin()
                 .where(movie.inUse.eq(true))
                 .offset(offset)
                 .limit(pageSize)
@@ -105,6 +109,7 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
                 .selectFrom(movie)
                 .leftJoin(movie.movieImages, movieImage).fetchJoin()
                 .leftJoin(movie.movieVideos, movieVideo).fetchJoin()
+                .leftJoin(movie.castMembers, castMember).fetchJoin()
                 .where(
                         searchByMovieName(movieSearchCond.getMovieName()),
                         searchByDirector(movieSearchCond.getDirector()),
@@ -129,6 +134,10 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
             jpaQueryFactory.delete(movieImage)
                     .where(movieImage.movie.eq(movie))
                     .execute();
+
+            jpaQueryFactory.delete(castMember)
+                            .where(castMember.movie.eq(movie))
+                                    .execute();
 
             // Movie 엔티티 삭제
             jpaQueryFactory.delete(movie)

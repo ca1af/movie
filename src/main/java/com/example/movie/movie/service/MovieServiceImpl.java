@@ -48,6 +48,9 @@ public class MovieServiceImpl implements MovieService {
                 .director(movieRequestDto.getDirector())
                 .posterImageUrl(movieRequestDto.getPostImageUrl())
                 .releaseDate(movieRequestDto.getReleaseDate())
+                .synopsis(movieRequestDto.getSynopsis())
+                .runningTime(movieRequestDto.getRunningTime())
+                .originalTitle(movieRequestDto.getOriginalTitle())
                 .build();
 
         return MovieResponseDto.of(movie);

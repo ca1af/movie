@@ -1,8 +1,10 @@
 package com.example.movie.movie;
 
+import com.example.movie.movie.entity.CastMember;
 import com.example.movie.movie.entity.Movie;
 import com.example.movie.movie.entity.MovieImage;
 import com.example.movie.movie.entity.MovieVideo;
+import com.example.movie.movie.repository.CastMemberRepository;
 import com.example.movie.movie.repository.MovieImageRepository;
 import com.example.movie.movie.repository.MovieRepository;
 import com.example.movie.movie.repository.MovieVideoRepository;
@@ -19,11 +21,13 @@ public class DummyDataLoader implements CommandLineRunner {
     private final MovieRepository movieRepository;
     private final MovieImageRepository movieImageRepository;
     private final MovieVideoRepository movieVideoRepository;
+    private final CastMemberRepository castMemberRepository;
 
-    public DummyDataLoader(MovieRepository movieRepository, MovieImageRepository movieImageRepository, MovieVideoRepository movieVideoRepository) {
+    public DummyDataLoader(MovieRepository movieRepository, MovieImageRepository movieImageRepository, MovieVideoRepository movieVideoRepository, CastMemberRepository castMemberRepository) {
         this.movieRepository = movieRepository;
         this.movieImageRepository = movieImageRepository;
         this.movieVideoRepository = movieVideoRepository;
+        this.castMemberRepository = castMemberRepository;
     }
 
     @Override
@@ -35,6 +39,9 @@ public class DummyDataLoader implements CommandLineRunner {
                         .movieName("Movie " + i)
                         .director("Director " + i)
                         .genre("Genre " + i)
+                        .originalTitle("Original Title " + i)
+                        .synopsis("Synopsis " + i)
+                        .runningTime(120)
                         .build())
                 .collect(Collectors.toList());
 
@@ -65,6 +72,20 @@ public class DummyDataLoader implements CommandLineRunner {
             }
         }
         movieVideoRepository.saveAll(movieVideos);
+
+        List<CastMember> castMembers = new ArrayList<>();
+        for (Movie movie : movies) {
+            for (int i = 1; i <= 3; i++) {
+                CastMember castMember = CastMember.builder()
+                        .memberName("Cast Member " + i)
+                        .movie(movie)
+                        .build();
+
+                castMembers.add(castMember);
+            }
+        }
+
+        castMemberRepository.saveAll(castMembers);
     }
 }
 

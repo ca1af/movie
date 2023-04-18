@@ -1,5 +1,6 @@
 package com.example.movie.movie.dto;
 
+import com.example.movie.movie.entity.CastMember;
 import com.example.movie.movie.entity.Movie;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class MovieResponseDto {
     private String postImageUrl;
     private Set<MovieImageResponseDto> movieImages;
     private Set<MovieVideoResponseDto> movieVideos;
+    private Set<CastMemberResponseDto> castMembers;
 
     private MovieResponseDto(Movie movie) {
         this.id = movie.getId();
@@ -40,6 +42,11 @@ public class MovieResponseDto {
         this.movieVideos = movie.getMovieVideos().stream()
                 .map(MovieVideoResponseDto::of)
                 .sorted(Comparator.comparingLong(MovieVideoResponseDto::getId))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+
+        this.castMembers = movie.getCastMembers().stream()
+                .map(CastMemberResponseDto::of)
+                .sorted(Comparator.comparingLong(CastMemberResponseDto::getId))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 

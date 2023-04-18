@@ -21,6 +21,12 @@ public class Movie {
     @Column(nullable = false, unique = true)
     private String movieName;
 
+    private String originalTitle;
+
+    private Integer runningTime;
+
+    private String synopsis;
+
     @Column(nullable = false)
     private String genre;
 
@@ -38,13 +44,20 @@ public class Movie {
     @OneToMany(mappedBy = "movie", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<MovieVideo> movieVideos = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private Set<CastMember> castMembers = new LinkedHashSet<>();
+
     @Builder
-    public Movie(Long releaseDate, String movieName, String genre, String director, String posterImageUrl) {
+    public Movie(Long releaseDate, String movieName, String genre, String director, String posterImageUrl,
+             String originalTitle, Integer runningTime, String synopsis) {
         this.releaseDate = releaseDate;
         this.movieName = movieName;
         this.genre = genre;
         this.director = director;
         this.posterImageUrl = posterImageUrl;
+        this.originalTitle = originalTitle;
+        this.runningTime = runningTime;
+        this.synopsis = synopsis;
     }
 
     public void updateMovie(MovieRequestDto movieRequestDto) {

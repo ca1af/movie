@@ -24,6 +24,9 @@ class MovieServiceImplTest {
                 .movieName("Movie " + "1")
                 .director("Director ")
                 .genre("Genre ")
+                .originalTitle("")
+                .runningTime(20)
+                .synopsis("")
                 .build();
 
         // then

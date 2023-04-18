@@ -13,4 +13,7 @@ public class MovieRequestDto {
     private String genre;
     private String director;
     private String postImageUrl;
+    private String originalTitle;
+    private Integer runningTime;
+    private String synopsis;
 }
