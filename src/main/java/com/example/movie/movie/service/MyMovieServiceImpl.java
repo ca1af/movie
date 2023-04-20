@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 @Service
 @RequiredArgsConstructor
 public class MyMovieServiceImpl implements MyMovieService {
+
     private final MovieRepository movieRepository;
 
     @Override
@@ -24,7 +25,7 @@ public class MyMovieServiceImpl implements MyMovieService {
     @Override
     @Transactional(readOnly = true)
     public List<MovieResponseDto> getMoviesBySearchCond(MovieSearchCond movieSearchCond) {
-        return movieRepository.searchMovieByCond(movieSearchCond);
+        return movieRepository.getMoviesBySearchCond(movieSearchCond);
     }
 
     @Override

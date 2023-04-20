@@ -32,11 +32,20 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
         return Objects.nonNull(director) ? movie.director.contains(director) : null;
     }
     @Override
+    public boolean existsByMovieId(Long movieId) {
+        return jpaQueryFactory.selectOne()
+                .from(movie)
+                .where(movie.id.eq(movieId))
+                .fetchFirst() != null;
+        // fetchFirst == .limit(1).fetchOne()
+    }
+
+    @Override
     public boolean existsByMovieName(String movieName){
         return jpaQueryFactory.selectOne()
                 .from(movie)
                 .where(movie.movieName.eq(movieName))
-                .fetchOne() != null;
+                .fetchFirst() != null;
     }
 
     @Override
@@ -49,7 +58,7 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
                         .leftJoin(movie.castMembers, castMember).fetchJoin()
                         .where(movie.inUse.eq(true),
                                 movie.id.eq(movieId))
-                        .fetchOne()
+                        .fetchFirst()
         );
     }
 
@@ -104,7 +113,12 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
 
 
     @Override
-    public List<MovieResponseDto> searchMovieByCond(MovieSearchCond movieSearchCond) {
+    public List<MovieResponseDto> getMoviesBySearchCond(MovieSearchCond movieSearchCond) {
+
+        if (movieSearchCond.getMovieName() == null && movieSearchCond.getDirector() == null){
+            throw new IllegalArgumentException("항목을 입력 해 주세요");
+        }
+
         List<Movie> movieList = jpaQueryFactory
                 .selectFrom(movie)
                 .leftJoin(movie.movieImages, movieImage).fetchJoin()
@@ -121,12 +135,11 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
 
     @Override
     public void deleteMovieById(Long movieId) {
-        // join 이 일어나지 않는 가벼운 쿼리로 객체 탐색
-        Movie foundMovie = jpaQueryFactory.selectFrom(movie)
-                .where(movie.id.eq(movieId))
-                .fetchOne();
-        // N+1 delete 를 막기 위해. Native query 로 한번에 가능하지만, 위험하므로 아래와 같이 작성
-        if (foundMovie != null) {
+
+        if (!existsByMovieId(movieId)){
+            throw new IllegalArgumentException("해당하는 영화가 없습니다.");
+        }
+
             jpaQueryFactory.delete(movieVideo)
                     .where(movieVideo.movie.id.eq(movieId))
                     .execute();
@@ -144,7 +157,7 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
                     .where(movie.id.eq(movieId))
                     .execute();
         }
-    }
+
 //    @Override
 //    public void softDeleteMovieById(Long movieId) {
 //        jpaQueryFactory

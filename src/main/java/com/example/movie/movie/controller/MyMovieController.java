@@ -3,6 +3,7 @@ package com.example.movie.movie.controller;
 import com.example.movie.movie.dto.MovieResponseDto;
 import com.example.movie.movie.repository.query.MovieSearchCond;
 import com.example.movie.movie.service.MyMovieService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class MyMovieController {
     }
 
     @GetMapping("/api/v1/movies/search") // cond?
-    public ResponseEntity<List<MovieResponseDto>> moviesBySearchCond(@RequestBody MovieSearchCond movieSearchCond){
+    public ResponseEntity<List<MovieResponseDto>> moviesBySearchCond(@RequestBody @Valid MovieSearchCond movieSearchCond) throws IllegalAccessException {
         List<MovieResponseDto> movieList = movieService.getMoviesBySearchCond(movieSearchCond);
         if (movieList.isEmpty()) {
             return ResponseEntity.noContent().build();
