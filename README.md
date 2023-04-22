@@ -1,6 +1,10 @@
 # 개요
 
 
+Swagger 사용한 API 명세
+Application run 후 아래 링크
+http://localhost:8080/swagger-ui/index.html
+
 과제에 더불어
 1. 추가 기능(페이징, 논리삭제, 동적조회)
 2. 테스트 코드 작성
