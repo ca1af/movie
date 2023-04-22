@@ -1,5 +1,6 @@
 package com.example.movie.movie;
 
+import com.example.movie.common.aop.ExeTimer;
 import com.example.movie.movie.entity.CastMember;
 import com.example.movie.movie.entity.Movie;
 import com.example.movie.movie.entity.MovieImage;
@@ -23,6 +24,7 @@ public class DummyDataLoader implements CommandLineRunner {
     private final JdbcBulkInsertRepository jdbcBulkInsertRepository;
 
     @Override
+    @ExeTimer
     public void run(String... args) throws Exception {
         List<Movie> movies = movieRepository.findAll();
 
@@ -71,6 +73,7 @@ public class DummyDataLoader implements CommandLineRunner {
     }
 
     @PostConstruct
+    @ExeTimer
     public void afterRun(){
         List<Movie> movies = IntStream.rangeClosed(1, 20)
                 .mapToObj(i -> Movie.builder()
