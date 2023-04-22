@@ -4,10 +4,8 @@ import com.example.movie.movie.entity.CastMember;
 import com.example.movie.movie.entity.Movie;
 import com.example.movie.movie.entity.MovieImage;
 import com.example.movie.movie.entity.MovieVideo;
-import com.example.movie.movie.repository.CastMemberRepository;
-import com.example.movie.movie.repository.MovieImageRepository;
-import com.example.movie.movie.repository.MovieRepository;
-import com.example.movie.movie.repository.MovieVideoRepository;
+import com.example.movie.movie.repository.*;
+import jakarta.annotation.PostConstruct;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -22,32 +20,22 @@ public class DummyDataLoader implements CommandLineRunner {
     private final MovieImageRepository movieImageRepository;
     private final MovieVideoRepository movieVideoRepository;
     private final CastMemberRepository castMemberRepository;
+    private final JdbcBulkInsertRepository jdbcBulkInsertRepository;
 
-    public DummyDataLoader(MovieRepository movieRepository, MovieImageRepository movieImageRepository, MovieVideoRepository movieVideoRepository, CastMemberRepository castMemberRepository) {
+    public DummyDataLoader(MovieRepository movieRepository, MovieImageRepository movieImageRepository, MovieVideoRepository movieVideoRepository, CastMemberRepository castMemberRepository, JdbcBulkInsertRepository jdbcBulkInsertRepository) {
         this.movieRepository = movieRepository;
         this.movieImageRepository = movieImageRepository;
         this.movieVideoRepository = movieVideoRepository;
         this.castMemberRepository = castMemberRepository;
+        this.jdbcBulkInsertRepository = jdbcBulkInsertRepository;
     }
 
     @Override
     public void run(String... args) throws Exception {
-        List<Movie> movies = IntStream.rangeClosed(1, 20)
-                .mapToObj(i -> Movie.builder()
-                        .releaseDate((long) i)
-                        .posterImageUrl("poster_" + i)
-                        .movieName("Movie " + i)
-                        .director("Director " + i)
-                        .genre("Genre " + i)
-                        .originalTitle("Original Title " + i)
-                        .synopsis("Synopsis " + i)
-                        .runningTime(120)
-                        .build())
-                .collect(Collectors.toList());
-
-        movieRepository.saveAll(movies);
+        List<Movie> movies = movieRepository.findAll();
 
         List<MovieImage> movieImages = new ArrayList<>();
+
         for (Movie movie : movies) {
             for (int i = 1; i <= 5; i++) {
 
@@ -59,7 +47,8 @@ public class DummyDataLoader implements CommandLineRunner {
                 movieImages.add(movieImage);
             }
         }
-        movieImageRepository.saveAll(movieImages);
+
+        jdbcBulkInsertRepository.bulkInsertMovieImage(movieImages);
 
         List<MovieVideo> movieVideos = new ArrayList<>();
         for (Movie movie : movies) {
@@ -71,7 +60,8 @@ public class DummyDataLoader implements CommandLineRunner {
                 movieVideos.add(movieVideo);
             }
         }
-        movieVideoRepository.saveAll(movieVideos);
+
+        jdbcBulkInsertRepository.bulkInsertMovieVideo(movieVideos);
 
         List<CastMember> castMembers = new ArrayList<>();
         for (Movie movie : movies) {
@@ -85,7 +75,24 @@ public class DummyDataLoader implements CommandLineRunner {
             }
         }
 
-        castMemberRepository.saveAll(castMembers);
+        jdbcBulkInsertRepository.bulkInsertCastMember(castMembers);
+    }
+
+    @PostConstruct
+    public void afterRun(){
+        List<Movie> movies = IntStream.rangeClosed(1, 20)
+                .mapToObj(i -> Movie.builder()
+                        .releaseDate((long) i)
+                        .posterImageUrl("poster_" + i)
+                        .movieName("Movie " + i)
+                        .director("Director " + i)
+                        .genre("Genre " + i)
+                        .originalTitle("Original Title " + i)
+                        .synopsis("Synopsis " + i)
+                        .runningTime(120)
+                        .build())
+                .collect(Collectors.toList());
+
+        jdbcBulkInsertRepository.bulkInsertMovies(movies);
     }
 }
-

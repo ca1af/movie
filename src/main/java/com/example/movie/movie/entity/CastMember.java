@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class CastMember {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String memberName;
     @ManyToOne(fetch = FetchType.LAZY)
