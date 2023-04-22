@@ -6,6 +6,7 @@ import com.example.movie.movie.entity.MovieImage;
 import com.example.movie.movie.entity.MovieVideo;
 import com.example.movie.movie.repository.*;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -15,20 +16,11 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Component
+@RequiredArgsConstructor
 public class DummyDataLoader implements CommandLineRunner {
-    private final MovieRepository movieRepository;
-    private final MovieImageRepository movieImageRepository;
-    private final MovieVideoRepository movieVideoRepository;
-    private final CastMemberRepository castMemberRepository;
-    private final JdbcBulkInsertRepository jdbcBulkInsertRepository;
 
-    public DummyDataLoader(MovieRepository movieRepository, MovieImageRepository movieImageRepository, MovieVideoRepository movieVideoRepository, CastMemberRepository castMemberRepository, JdbcBulkInsertRepository jdbcBulkInsertRepository) {
-        this.movieRepository = movieRepository;
-        this.movieImageRepository = movieImageRepository;
-        this.movieVideoRepository = movieVideoRepository;
-        this.castMemberRepository = castMemberRepository;
-        this.jdbcBulkInsertRepository = jdbcBulkInsertRepository;
-    }
+    private final MovieRepository movieRepository;
+    private final JdbcBulkInsertRepository jdbcBulkInsertRepository;
 
     @Override
     public void run(String... args) throws Exception {
