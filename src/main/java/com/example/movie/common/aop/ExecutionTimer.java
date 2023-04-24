@@ -14,7 +14,7 @@ import org.springframework.util.StopWatch;
 @Component
 public class ExecutionTimer {
     @Pointcut("@annotation(com.example.movie.common.aop.ExeTimer)")
-    private void timer(){};
+    private void timer(){}
 
     @Around("timer()")
     public Object AssumeExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
