@@ -29,6 +29,12 @@ http://localhost:8080/swagger-ui/index.html
 - 객체의 관점에서 보더라도, 이미지나 비디오는 확장의 가능성이 있으므로 다른 테이블에 놓는 것이 유리하다고 판단했습니다.
 
 ---
+# 아키텍쳐
+
+- Spring 프로젝트에서 Typical 하게 사용되는 레이어드 아키텍쳐를 사용했습니다.
+- Presentation Layer 는 Controller를 사용해서 구현되었고, Business Layer는 Service(+Entity), Data Area는 JPA에서 제공하는 Repository와 Jdbc Template을 사용했습니다.
+
+---
 
 
 # MovieController (기본 기능) API  
