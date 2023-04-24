@@ -1,6 +1,11 @@
 # 개요
 
 
+Swagger 사용한 API 명세
+Application run 후 아래 링크
+<br>
+http://localhost:8080/swagger-ui/index.html
+
 과제에 더불어
 1. 추가 기능(페이징, 논리삭제, 동적조회)
 2. 테스트 코드 작성
@@ -22,6 +27,12 @@
 - Movie 테이블에 연결되어 있는 테이블은 MovieImage, MovieVideo, CastMember 테이블이 있습니다.
 - Movie 엔티티의 필드에 넣지 않고 연관관계를 설정하여 다른 테이블로 빼놓은 이유는 데이터 베이스의 정규화를 위함입니다.
 - 객체의 관점에서 보더라도, 이미지나 비디오는 확장의 가능성이 있으므로 다른 테이블에 놓는 것이 유리하다고 판단했습니다.
+
+---
+# 아키텍쳐
+
+- Spring 프로젝트에서 Typical 하게 사용되는 레이어드 아키텍쳐를 사용했습니다.
+- Presentation Layer 는 Controller를 사용해서 구현되었고, Business Layer는 Service(+Entity), Data Area는 JPA에서 제공하는 Repository와 Jdbc Template을 사용했습니다.
 
 ---
 
