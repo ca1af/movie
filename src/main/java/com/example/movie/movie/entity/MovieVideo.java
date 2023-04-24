@@ -18,6 +18,7 @@ public class MovieVideo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Movie movie;
+
     @Builder
     public MovieVideo(Long id, String videoUrl, Movie movie) {
         this.id = id;

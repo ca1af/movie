@@ -73,7 +73,6 @@ public class DummyDataLoader implements CommandLineRunner {
     }
 
     @PostConstruct
-    @ExeTimer
     public void afterRun(){
         List<Movie> movies = IntStream.rangeClosed(1, 20)
                 .mapToObj(i -> Movie.builder()
