@@ -20,27 +20,6 @@ http://localhost:8080/swagger-ui/index.html
 - 부트시 DummyDataLoader 클래스를 사용해 20개의 더미데이터와 80개의 상응하는 이미지, 비디오 url 이 저장됩니다
 - Java 17, SpringBoot 3.0.5 사용했으며 build.gradle 파일에 저장되어 별도의 설정이 필요 없습니다. 다만 SDK(17)의 경우 프로젝트 빌드를 위해 설치되어야 합니다.
 
----
-
-# How to build
-
-- 자바 버전 설치
-- gradle.build
-- run 시에 gradle.run
-
-
-// Id 생성 시 UUID 사용하는 부분 찾아보기
-
-
----
-## 어떤 문제들이 있는지?
-
-1. 문서에 적힌 스펙과 다른경우
-
-2. Jwt 인데 key 넣어야한...
-
-3. 잘못된 요구사항들...
-
 
 ---
 # 테이블과 연관관계에 대해서
