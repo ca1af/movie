@@ -17,9 +17,12 @@ public class MovieSearchCond {
     @Pattern(regexp = "^[가-힣a-zA-Z0-9]{1,10}$", message = "감독 이름은 1~10글자의 한글, 영어, 숫자로 이루어져야 합니다.")
     private String director;
 
+    private String genre;
+
     @Builder
-    public MovieSearchCond(String movieName, String director) {
+    public MovieSearchCond(String movieName, String director, String genre) {
         this.movieName = movieName;
         this.director = director;
+        this.genre = genre;
     }
 }

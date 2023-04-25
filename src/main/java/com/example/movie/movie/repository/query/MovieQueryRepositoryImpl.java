@@ -31,6 +31,11 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
     private BooleanExpression searchByDirector(String director) {
         return Objects.nonNull(director) ? movie.director.contains(director) : null;
     }
+
+    private BooleanExpression searchByGenre(String genre){
+        return Objects.nonNull(genre) ? movie.genre.contains(genre) : null;
+    }
+
     @Override
     public boolean existsByMovieId(Long movieId) {
         return jpaQueryFactory.selectOne()
@@ -115,7 +120,7 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
     @Override
     public List<MovieResponseDto> getMoviesBySearchCond(MovieSearchCond movieSearchCond) {
 
-        if (movieSearchCond.getMovieName() == null && movieSearchCond.getDirector() == null){
+        if (movieSearchCond.getMovieName() == null && movieSearchCond.getDirector() == null && movieSearchCond.getGenre() == null){
             throw new IllegalArgumentException("항목을 입력 해 주세요");
         }
 
@@ -127,6 +132,7 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
                 .where(
                         searchByMovieName(movieSearchCond.getMovieName()),
                         searchByDirector(movieSearchCond.getDirector()),
+                        searchByGenre(movieSearchCond.getGenre()),
                         movie.inUse.eq(true))
                 .fetch();
 
