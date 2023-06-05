@@ -7,6 +7,7 @@ import com.example.movie.movie.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -59,7 +60,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.DEFAULT)
     public void updateMovie(Long movieId, MovieRequestDto movieRequestDto) {
         Movie movie = movieRepository.findByIdAndInUseIsTrue(movieId).orElseThrow(
                 () -> new NoSuchElementException("해당하는 영화가 없습니다")
