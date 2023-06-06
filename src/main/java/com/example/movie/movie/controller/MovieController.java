@@ -31,9 +31,6 @@ public class MovieController {
     public ResponseEntity<MovieResponseDto> getMovieById(@PathVariable Long movieId){
         return ResponseEntity.ok(movieService.getMovieById(movieId));
     }
-
-    //PostMan 등으로 확인만 할거라면...그냥 JSon 형태의 데이터를 보여주는 게 낫나?...
-
     @PostMapping("/api/v1/movies")
     public ResponseEntity<Void> createMovie(@RequestBody @Valid MovieRequestDto movieRequestDto){
         MovieResponseDto movie = movieService.createMovie(movieRequestDto);
