@@ -1,5 +1,6 @@
 package com.example.movie.movie.controller;
 
+import com.example.movie.common.aop.CountExeByMovieId;
 import com.example.movie.movie.dto.MovieRequestDto;
 import com.example.movie.movie.dto.MovieResponseDto;
 import com.example.movie.movie.service.MovieService;
@@ -28,6 +29,7 @@ public class MovieController {
     }
 
     @GetMapping("/api/v1/movies/{movieId}")
+    @CountExeByMovieId // 특정 movieId를 통해 get하므로, 여기다 찍어주자
     public ResponseEntity<MovieResponseDto> getMovieById(@PathVariable Long movieId){
         return ResponseEntity.ok(movieService.getMovieById(movieId));
     }
