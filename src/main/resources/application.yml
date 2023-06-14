@@ -1,0 +1,37 @@
+# Hibernate
+spring:
+  #H2
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:db;MODE=MYSQL;
+    username: sa
+    password: ''
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 1000
+    open-in-view: false
+  mail:
+    host: smtp.gmail.com # 서버 호스트
+    port: 587 # 포트
+    username: ${mail.username} # 발신자 이메일
+    password: ${mail.password} # 패스워드
+    properties:
+      mail:
+        debug : true
+        smtp:
+          auth: true # 5
+          timeout: 5000 # 6
+          starttls:
+            enable: true # 7
+
+
+output:
+  file:
+    path: /Users/dongkyunkim/Downloads

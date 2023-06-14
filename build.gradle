@@ -26,6 +26,9 @@ dependencies {
     // Spring Batch
     implementation 'org.springframework.boot:spring-boot-starter-batch'
 
+    // Spring Boot Email
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
     //spring web
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'junit:junit:4.13.1'
