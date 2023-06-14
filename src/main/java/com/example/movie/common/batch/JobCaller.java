@@ -19,7 +19,7 @@ import java.util.Date;
 public class JobCaller {
     private final JobLauncher jobLauncher;
     private final Job simpleJob1; // bean으로 등록되어 있기 때문에 의존 주입 받을 수 있다.
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0 4 * * *")
     public void runApiCallJob() throws JobParametersInvalidException,
             JobExecutionAlreadyRunningException,
             JobRestartException, JobInstanceAlreadyCompleteException {

@@ -7,21 +7,24 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import java.lang.reflect.Array;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 @EnableScheduling
@@ -30,6 +33,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BatchConfig {
     private final MovieRepository movieRepository;
+
+    @Value("${output.file.path}")
+    private String outputFilePath;
+
     @Bean
     public Job simpleJob1(JobRepository jobRepository, Step simpleStep1, Step simpleStep2) {
         return new JobBuilder("simpleJob", jobRepository)
@@ -37,13 +44,15 @@ public class BatchConfig {
                 .next(simpleStep2)
                 .build();
     }
+
     @Bean
-    public Step simpleStep1(JobRepository jobRepository, Tasklet testTasklet, PlatformTransactionManager platformTransactionManager){
+    public Step simpleStep1(JobRepository jobRepository, Tasklet testTasklet, PlatformTransactionManager platformTransactionManager) {
         return new StepBuilder("simpleStep1", jobRepository)
                 .tasklet(testTasklet, platformTransactionManager).build();
     }
+
     @Bean
-    public Tasklet testTasklet(){
+    public Tasklet testTasklet() {
         return ((contribution, chunkContext) -> {
             ArrayList<Long> ids = new ArrayList<>(AnnotationBasedAOP.map.keySet());
             HashMap<String, Long> names = new HashMap<>();
@@ -54,27 +63,36 @@ public class BatchConfig {
                 names.put(movie.getMovieName(), AnnotationBasedAOP.map.get(movie.getId()));
             }
 
-            // TODO: 2023/06/12 이곳에 movieNameMap을 파일/디비로 저장하는 로직이 필요하다.
-            //  현재는 로깅하도록 하자
+            LocalDate currentDate = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd");
+            String formattedDate = currentDate.format(formatter);
 
-            for (String s : names.keySet()) {
-                log.info("영화 이름 :" + s + ", 호출 횟수 :" + names.get(s));
+            String fileName = "movie_" + formattedDate + ".txt";
+            String filePath = outputFilePath + "/" + fileName;
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+                for (String s : names.keySet()) {
+                    String line = "영화 이름: " + s + ", 호출 횟수: " + names.get(s);
+                    writer.write(line);
+                    writer.newLine();
+                }
+                log.info("데이터를 파일에 저장했습니다: " + outputFilePath);
+            } catch (IOException e) {
+                log.error("파일 저장 중 오류가 발생했습니다: " + outputFilePath, e);
             }
-
-//            AnnotationBasedAOP.map.clear();
 
             return RepeatStatus.FINISHED;
         });
     }
 
     @Bean
-    public Step simpleStep2(JobRepository jobRepository, Tasklet testTasklet, PlatformTransactionManager platformTransactionManager){
+    public Step simpleStep2(JobRepository jobRepository, Tasklet testTasklet, PlatformTransactionManager platformTransactionManager) {
         return new StepBuilder("simpleStep2", jobRepository)
                 .tasklet(testTasklet2(), platformTransactionManager).build();
     }
 
     @Bean
-    public Tasklet testTasklet2(){
+    public Tasklet testTasklet2() {
         return ((contribution, chunkContext) -> {
 
             AnnotationBasedAOP.map.clear();
