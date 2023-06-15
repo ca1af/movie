@@ -38,16 +38,16 @@ public class JobCaller {
 
         jobLauncher.run(simpleJob1, jobParameters);
 
-        // 파일 생성 완료 후 이메일 발송
-        String recipientEmail = "laancer@naver.com";
-        String subject = "테스트 1";
-        String body = "테스트 1번입니다.";
+        String receiverEmail = "laancer@naver.com"; // 받는 사람 이메일 주소
+        String subject = "테스트 : 제목"; // 제목
+        String body = "테스트를 위해서 발송됩니다"; // 내용
 
+        // 파일 만들 때 시간 저장하던 놈들. 시간을 찍어주기 위해서 사용한다
         LocalDate currentDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd");
         String formattedDate = currentDate.format(formatter);
 
-        String filePath = outputFilePath + "/movie_" + formattedDate + ".txt";
-        mailService.sendEmailWithAttachment(recipientEmail, subject, body, filePath);
+        String filePath = outputFilePath + "/movie_" + formattedDate + ".txt"; // 파일 경로
+        mailService.sendEmailWithAttachment(receiverEmail, subject, body, filePath);
     }
 }

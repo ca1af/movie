@@ -13,17 +13,17 @@ import java.io.File;
 @Service
 public class MailService {
     private final JavaMailSender mailSender;
+    public void sendEmailWithAttachment(String receiverEmail, String subject, String body, String filePath)
+            throws MessagingException {
 
-
-    public void sendEmailWithAttachment(String recipientEmail, String subject, String body, String filePath) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-        helper.setTo(recipientEmail);
+        helper.setTo(receiverEmail);
         helper.setSubject(subject);
         helper.setText(body);
 
-        File attachment = new File(filePath);
+        File attachment = new File(filePath); // 패스에 이미 저장해놓은 텍스트 파일임 ( 먼저 실행된 Job에서 생성됨 )
         helper.addAttachment(attachment.getName(), attachment);
 
         mailSender.send(message);
