@@ -28,7 +28,7 @@ public class JobCaller {
     @Value("${output.file.path}")
     private String outputFilePath;
 
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0 4 * * *")
     public void runApiCallJob() throws JobParametersInvalidException,
             JobExecutionAlreadyRunningException,
             JobRestartException, JobInstanceAlreadyCompleteException, MessagingException {
