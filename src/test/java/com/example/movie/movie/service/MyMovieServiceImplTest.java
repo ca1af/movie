@@ -1,12 +1,17 @@
 package com.example.movie.movie.service;
 
+import com.example.movie.common.redis.RedisDAO;
 import com.example.movie.movie.dto.MovieResponseDto;
 import com.example.movie.movie.entity.Movie;
 import com.example.movie.movie.repository.MovieRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -16,6 +21,31 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class MyMovieServiceImplTest {
     @Autowired
     private MovieRepository movieRepository;
+    @Autowired
+    private RedisDAO redisDAO;
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Test
+    void setMoviesRedisTest() throws JsonProcessingException {
+        //when
+        List<MovieResponseDto> movieList = movieRepository.getMoviesPaging(1L);
+        //then
+
+        redisDAO.setValues("key1", movieList, Duration.ofMillis(100000));
+
+        // Controller 테스트에서 상태코드 확인해볼까?
+    }
+
+    @Test
+    void getMoviesRedisTest() throws JsonProcessingException {
+        List<MovieResponseDto> movieList = redisDAO.getValues("key1", new TypeReference<List<MovieResponseDto>>() {});
+
+        for (MovieResponseDto movieResponseDto : movieList) {
+            System.out.println(movieResponseDto.getMovieName());
+        }
+
+    }
 
     @Test
     void getMoviesFailureTest(){

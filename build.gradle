@@ -26,6 +26,9 @@ dependencies {
     // Spring Batch
     implementation 'org.springframework.boot:spring-boot-starter-batch'
 
+    // SpringBoot + Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
     // Spring Boot Email
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
