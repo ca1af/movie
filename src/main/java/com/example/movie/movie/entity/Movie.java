@@ -1,6 +1,7 @@
 package com.example.movie.movie.entity;
 
 import com.example.movie.movie.dto.MovieRequestDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -38,12 +39,15 @@ public class Movie {
 
     private Boolean inUse = true;
 
+//    @JsonIgnore
     @OneToMany(mappedBy = "movie", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<MovieImage> movieImages = new LinkedHashSet<>();
 
+//    @JsonIgnore
     @OneToMany(mappedBy = "movie", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<MovieVideo> movieVideos = new LinkedHashSet<>();
 
+//    @JsonIgnore
     @OneToMany(mappedBy = "movie", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<CastMember> castMembers = new LinkedHashSet<>();
 

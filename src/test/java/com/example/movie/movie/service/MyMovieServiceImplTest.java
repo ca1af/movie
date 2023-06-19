@@ -5,8 +5,6 @@ import com.example.movie.movie.dto.MovieResponseDto;
 import com.example.movie.movie.entity.Movie;
 import com.example.movie.movie.repository.MovieRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,28 +21,34 @@ public class MyMovieServiceImplTest {
     private MovieRepository movieRepository;
     @Autowired
     private RedisDAO redisDAO;
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Test
-    void setMoviesRedisTest() throws JsonProcessingException {
-        //when
+    void redisListRightPushTest() throws JsonProcessingException {
         List<MovieResponseDto> movieList = movieRepository.getMoviesPaging(1L);
-        //then
+        redisDAO.addListValues("test1", movieList, Duration.ofMillis(10000));
 
-        redisDAO.setValues("key1", movieList, Duration.ofMillis(100000));
-
-        // Controller 테스트에서 상태코드 확인해볼까?
-    }
-
-    @Test
-    void getMoviesRedisTest() throws JsonProcessingException {
-        List<MovieResponseDto> movieList = redisDAO.getValues("key1", new TypeReference<List<MovieResponseDto>>() {});
-
-        for (MovieResponseDto movieResponseDto : movieList) {
+        List<MovieResponseDto> list = redisDAO.getListValues("test1", MovieResponseDto.class);
+        for (MovieResponseDto movieResponseDto : list) {
             System.out.println(movieResponseDto.getMovieName());
         }
 
+        assertEquals(list.get(0).getId(), 1); // 0은 인덱스, 1은 id이므로
+    }
+
+    @Test
+    void simpleSetAndGetTest() throws JsonProcessingException {
+        Movie movie = movieRepository.findById(3L).orElseThrow();
+        redisDAO.setValues("simple1", movie, Duration.ofMillis(10000));
+        Movie values = redisDAO.getValues("simple1", Movie.class);
+        assertEquals(values.getId(), 3L);
+    }
+
+    @Test
+    void getMovieAndCollectionsTest() throws JsonProcessingException {
+        MovieResponseDto movieAndCollections = movieRepository.findMovieAndCollections(3L);
+        redisDAO.setValues("simple1", movieAndCollections, Duration.ofMillis(10000));
+        Movie values = redisDAO.getValues("simple1", Movie.class);
+        assertEquals(values.getId(), 3L);
     }
 
     @Test

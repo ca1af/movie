@@ -164,6 +164,16 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
                     .execute();
         }
 
+    @Override
+    public MovieResponseDto findMovieAndCollections(Long movieId) {
+        return MovieResponseDto.of(jpaQueryFactory.selectFrom(movie)
+                .leftJoin(movie.movieImages, movieImage).fetchJoin()
+                .leftJoin(movie.movieVideos, movieVideo).fetchJoin()
+                .leftJoin(movie.castMembers, castMember).fetchJoin()
+                .where(movie.id.eq(movieId))
+                .fetchFirst());
+    }
+
 //    @Override
 //    public void softDeleteMovieById(Long movieId) {
 //        jpaQueryFactory
