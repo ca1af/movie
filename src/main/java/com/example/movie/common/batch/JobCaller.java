@@ -23,7 +23,7 @@ import java.util.Date;
 @Component
 public class JobCaller {
     private final JobLauncher jobLauncher;
-    private final Job simpleJob1; // bean으로 등록되어 있기 때문에 의존 주입 받을 수 있다.
+    private final Job movieCountJob; // bean으로 등록되어 있기 때문에 의존 주입 받을 수 있다.
     private final MailService mailService;
     @Value("${output.file.path}")
     private String outputFilePath;
@@ -36,7 +36,7 @@ public class JobCaller {
                 .addDate("date", new Date())
                 .toJobParameters();
 
-        jobLauncher.run(simpleJob1, jobParameters);
+        jobLauncher.run(movieCountJob, jobParameters);
 
         String receiverEmail = "laancer@naver.com"; // 받는 사람 이메일 주소
         String subject = "테스트 : 제목"; // 제목
