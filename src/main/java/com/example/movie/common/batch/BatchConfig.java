@@ -38,21 +38,21 @@ public class BatchConfig {
     private String outputFilePath;
 
     @Bean
-    public Job simpleJob1(JobRepository jobRepository, Step simpleStep1, Step simpleStep2) {
+    public Job movieCountJob(JobRepository jobRepository, Step countStep, Step clearStep) {
         return new JobBuilder("simpleJob", jobRepository)
-                .start(simpleStep1)
-                .next(simpleStep2)
+                .start(countStep)
+                .next(clearStep)
                 .build();
     }
 
     @Bean
-    public Step simpleStep1(JobRepository jobRepository, Tasklet testTasklet, PlatformTransactionManager platformTransactionManager) {
+    public Step countStep(JobRepository jobRepository, Tasklet countTasklet, PlatformTransactionManager platformTransactionManager) {
         return new StepBuilder("simpleStep1", jobRepository)
-                .tasklet(testTasklet, platformTransactionManager).build();
+                .tasklet(countTasklet, platformTransactionManager).build();
     }
 
     @Bean
-    public Tasklet testTasklet() {
+    public Tasklet countTasklet() {
         return ((contribution, chunkContext) -> {
             ArrayList<Long> ids = new ArrayList<>(AnnotationBasedAOP.map.keySet());
             HashMap<String, Long> names = new HashMap<>();
@@ -86,13 +86,13 @@ public class BatchConfig {
     }
 
     @Bean
-    public Step simpleStep2(JobRepository jobRepository, Tasklet testTasklet, PlatformTransactionManager platformTransactionManager) {
+    public Step clearStep(JobRepository jobRepository, Tasklet clearTasklet, PlatformTransactionManager platformTransactionManager) {
         return new StepBuilder("simpleStep2", jobRepository)
-                .tasklet(testTasklet2(), platformTransactionManager).build();
+                .tasklet(clearTasklet(), platformTransactionManager).build();
     }
 
     @Bean
-    public Tasklet testTasklet2() {
+    public Tasklet clearTasklet() {
         return ((contribution, chunkContext) -> {
 
             AnnotationBasedAOP.map.clear();
