@@ -16,6 +16,7 @@ public interface MovieQueryRepository {
     boolean existsByMovieName(String movieName);
 
     Optional<Movie> findByIdAndInUseIsTrue(Long movieId);
+    //testPush
     void deleteMovieById(Long movieId);
 
     MovieResponseDto findMovieAndCollections(Long movieId);
