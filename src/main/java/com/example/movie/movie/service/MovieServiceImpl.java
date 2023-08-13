@@ -1,6 +1,7 @@
 package com.example.movie.movie.service;
 
 import com.example.movie.movie.dto.MovieRequestDto;
+import com.example.movie.movie.dto.MovieRequestRecord;
 import com.example.movie.movie.dto.MovieResponseDto;
 import com.example.movie.movie.entity.Movie;
 import com.example.movie.movie.repository.MovieRepository;
@@ -36,22 +37,22 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     @Transactional
-    public MovieResponseDto createMovie(MovieRequestDto movieRequestDto) {
-        String movieName = movieRequestDto.getMovieName();
+    public MovieResponseDto createMovie(MovieRequestRecord movieRequestDto) {
+        String movieName = movieRequestDto.movieName();
 
         if (movieRepository.existsByMovieName(movieName)) {
             throw new DataIntegrityViolationException("중복된 영화이름이 이미 존재합니다.");
         }
 
         Movie movie = Movie.builder()
-                .movieName(movieRequestDto.getMovieName())
-                .genre(movieRequestDto.getGenre())
-                .director(movieRequestDto.getDirector())
-                .posterImageUrl(movieRequestDto.getPostImageUrl())
-                .releaseDate(movieRequestDto.getReleaseDate())
-                .synopsis(movieRequestDto.getSynopsis())
-                .runningTime(movieRequestDto.getRunningTime())
-                .originalTitle(movieRequestDto.getOriginalTitle())
+                .movieName(movieRequestDto.movieName())
+                .genre(movieRequestDto.genre())
+                .director(movieRequestDto.director())
+                .posterImageUrl(movieRequestDto.postImageUrl())
+                .releaseDate(movieRequestDto.releaseDate())
+                .synopsis(movieRequestDto.synopsis())
+                .runningTime(movieRequestDto.runningTime())
+                .originalTitle(movieRequestDto.originalTitle())
                 .build();
 
         movieRepository.save(movie);

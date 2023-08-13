@@ -1,6 +1,7 @@
 package com.example.movie.movie.service;
 
 import com.example.movie.movie.dto.MovieRequestDto;
+import com.example.movie.movie.dto.MovieRequestRecord;
 import com.example.movie.movie.dto.MovieResponseDto;
 
 import java.util.List;
@@ -15,6 +16,6 @@ public interface MovieService {
 
     void deleteMovie(Long movieId);
 
-    MovieResponseDto createMovie(MovieRequestDto movieRequestDto);
+    MovieResponseDto createMovie(MovieRequestRecord movieRequestDto);
 
 }

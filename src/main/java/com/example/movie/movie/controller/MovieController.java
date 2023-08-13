@@ -2,6 +2,7 @@ package com.example.movie.movie.controller;
 
 import com.example.movie.common.aop.CountExeByMovieId;
 import com.example.movie.movie.dto.MovieRequestDto;
+import com.example.movie.movie.dto.MovieRequestRecord;
 import com.example.movie.movie.dto.MovieResponseDto;
 import com.example.movie.movie.service.MovieService;
 import jakarta.validation.Valid;
@@ -34,7 +35,7 @@ public class MovieController {
         return ResponseEntity.ok(movieService.getMovieById(movieId));
     }
     @PostMapping("/api/v1/movies")
-    public ResponseEntity<Void> createMovie(@RequestBody @Valid MovieRequestDto movieRequestDto){
+    public ResponseEntity<Void> createMovie(@RequestBody @Valid MovieRequestRecord movieRequestDto){
         MovieResponseDto movie = movieService.createMovie(movieRequestDto);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
