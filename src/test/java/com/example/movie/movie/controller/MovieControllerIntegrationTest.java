@@ -1,13 +1,11 @@
 package com.example.movie.movie.controller;
 
-import com.example.movie.movie.dto.MovieRequestDto;
 import com.example.movie.movie.dto.MovieRequestRecord;
 import com.example.movie.movie.dto.MovieResponseDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,9 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MovieControllerIntegrationTest {
-
-    @LocalServerPort
-    private int port;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -69,7 +64,7 @@ class MovieControllerIntegrationTest {
         Long movieId = 1L;
         MovieRequestRecord movieRequestDto = new MovieRequestRecord(
                 2023L,
-                movieName.substring(0, 13), // 중복된 이름을 막기 위함
+                movieName.substring(0, 11), // 중복된 이름을 막기 위함
                 "Action1",
                 "Test Director",
                 "http://example.com/poster.jpg",
