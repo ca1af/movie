@@ -1,23 +1,28 @@
 package com.example.movie.movie.controller;
 
 import com.example.movie.movie.dto.MovieResponseDto;
+import com.example.movie.movie.repository.MovieRepository;
 import com.example.movie.movie.service.MovieService;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 
 @WebMvcTest(MovieController.class)
-public class MovieControllerTest {
+class MovieControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -41,6 +46,7 @@ public class MovieControllerTest {
         // when
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/movies")
                         .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(20));
 
@@ -58,7 +64,9 @@ public class MovieControllerTest {
         // when
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/movies")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNoContent())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.json1").doesNotExist());
 
         // then
         verify(movieService, times(1)).getMovies();

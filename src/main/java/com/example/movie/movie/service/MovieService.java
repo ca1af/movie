@@ -12,7 +12,7 @@ public interface MovieService {
 
     MovieResponseDto getMovieById(Long movieId);
 
-    void updateMovie(Long movieId, MovieRequestDto movieRequestDto);
+    void updateMovie(Long movieId, MovieRequestRecord movieRequestDto);
 
     void deleteMovie(Long movieId);
 

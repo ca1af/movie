@@ -15,28 +15,25 @@ import java.util.List;
 public class MyMovieController {
 
     private final MyMovieService movieService;
-
-    @GetMapping("/api/v1/movies/pages/{pageNum}")
+    @GetMapping("/movies/pages/{pageNum}")
     public ResponseEntity<List<MovieResponseDto>> getMoviesPaging(@PathVariable Long pageNum) {
         List<MovieResponseDto> movieList = movieService.getMoviesPaging(pageNum);
         if (movieList.isEmpty()) {
             return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(movieList);
         }
+        return ResponseEntity.ok(movieList);
     }
 
-    @GetMapping("/api/v1/movies/search") // cond?
-    public ResponseEntity<List<MovieResponseDto>> moviesBySearchCond(@RequestBody @Valid MovieSearchCond movieSearchCond) throws IllegalAccessException {
+    @GetMapping("/movies/search") // cond?
+    public ResponseEntity<List<MovieResponseDto>> moviesBySearchCond(@ModelAttribute @Valid MovieSearchCond movieSearchCond) {
         List<MovieResponseDto> movieList = movieService.getMoviesBySearchCond(movieSearchCond);
         if (movieList.isEmpty()) {
             return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(movieList);
         }
+        return ResponseEntity.ok(movieList);
     }
 
-    @PatchMapping("/api/v1/movies/{movieId}")
+    @PutMapping("/movies/{movieId}")
     public ResponseEntity<Void> softDeleteMovie(@PathVariable Long movieId){
         movieService.softDeleteMovie(movieId);
         return ResponseEntity.ok().build();

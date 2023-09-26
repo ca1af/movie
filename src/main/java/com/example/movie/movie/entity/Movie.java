@@ -1,6 +1,7 @@
 package com.example.movie.movie.entity;
 
 import com.example.movie.movie.dto.MovieRequestDto;
+import com.example.movie.movie.dto.MovieRequestRecord;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -64,12 +65,12 @@ public class Movie {
         this.synopsis = synopsis;
     }
 
-    public void updateMovie(MovieRequestDto movieRequestDto) {
-        this.releaseDate = movieRequestDto.getReleaseDate();
-        this.movieName = movieRequestDto.getMovieName();
-        this.genre = movieRequestDto.getGenre();
-        this.director = movieRequestDto.getDirector();
-        this.posterImageUrl = movieRequestDto.getPostImageUrl();
+    public void updateMovie(MovieRequestRecord movieRequestDto) {
+        this.releaseDate = movieRequestDto.releaseDate();
+        this.movieName = movieRequestDto.movieName();
+        this.genre = movieRequestDto.genre();
+        this.director = movieRequestDto.director();
+        this.posterImageUrl = movieRequestDto.postImageUrl();
     }
 
     public void softDeleteMovie(){

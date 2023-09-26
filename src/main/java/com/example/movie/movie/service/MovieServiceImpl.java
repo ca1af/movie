@@ -6,6 +6,7 @@ import com.example.movie.movie.dto.MovieResponseDto;
 import com.example.movie.movie.entity.Movie;
 import com.example.movie.movie.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -16,6 +17,7 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository movieRepository;
@@ -38,9 +40,11 @@ public class MovieServiceImpl implements MovieService {
     @Override
     @Transactional
     public MovieResponseDto createMovie(MovieRequestRecord movieRequestDto) {
+        log.info("create Movie 시작 {}", movieRequestDto);
         String movieName = movieRequestDto.movieName();
 
         if (movieRepository.existsByMovieName(movieName)) {
+            log.info("중복입니다.");
             throw new DataIntegrityViolationException("중복된 영화이름이 이미 존재합니다.");
         }
 
@@ -57,12 +61,14 @@ public class MovieServiceImpl implements MovieService {
 
         movieRepository.save(movie);
 
+        log.info("save 완료");
+
         return MovieResponseDto.of(movie);
     }
 
     @Override
     @Transactional(isolation = Isolation.DEFAULT)
-    public void updateMovie(Long movieId, MovieRequestDto movieRequestDto) {
+    public void updateMovie(Long movieId, MovieRequestRecord movieRequestDto) {
         Movie movie = movieRepository.findByIdAndInUseIsTrue(movieId).orElseThrow(
                 () -> new NoSuchElementException("해당하는 영화가 없습니다")
         );

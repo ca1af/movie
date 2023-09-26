@@ -24,9 +24,8 @@ public class MovieController {
         List<MovieResponseDto> movieList = movieService.getMovies();
         if (movieList.isEmpty()) {
             return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(movieList);
         }
+        return ResponseEntity.ok(movieList);
     }
 
     @GetMapping("/api/v1/movies/{movieId}")
@@ -45,7 +44,7 @@ public class MovieController {
     }
 
     @PutMapping("/api/v1/movies/{movieId}")
-    public ResponseEntity<Void> updateMovie(@PathVariable Long movieId, @RequestBody @Valid MovieRequestDto movieRequestDto){
+    public ResponseEntity<Void> updateMovie(@PathVariable Long movieId, @RequestBody @Valid MovieRequestRecord movieRequestDto){
         movieService.updateMovie(movieId, movieRequestDto);
         return ResponseEntity.ok().build();
     }

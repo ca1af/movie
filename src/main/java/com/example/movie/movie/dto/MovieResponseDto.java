@@ -55,6 +55,6 @@ public class MovieResponseDto {
     }
 
     public static List<MovieResponseDto> toDto(List<Movie> movies){
-        return movies.stream().map(MovieResponseDto::of).collect(Collectors.toList());
+        return movies.stream().map(MovieResponseDto::of).toList();
     }
 }
