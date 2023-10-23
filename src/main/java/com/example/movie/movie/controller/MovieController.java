@@ -19,7 +19,7 @@ import java.util.List;
 public class MovieController {
     private final MovieService movieService;
 
-    @GetMapping("/api/v1/movies")
+    @GetMapping("/movies")
     public ResponseEntity<List<MovieResponseDto>> getMoviesDefault() {
         List<MovieResponseDto> movieList = movieService.getMovies();
         if (movieList.isEmpty()) {
@@ -28,12 +28,12 @@ public class MovieController {
         return ResponseEntity.ok(movieList);
     }
 
-    @GetMapping("/api/v1/movies/{movieId}")
+    @GetMapping("/movies/{movieId}")
     @CountExeByMovieId // 특정 movieId를 통해 get하므로, 여기다 찍어주자
     public ResponseEntity<MovieResponseDto> getMovieById(@PathVariable Long movieId){
         return ResponseEntity.ok(movieService.getMovieById(movieId));
     }
-    @PostMapping("/api/v1/movies")
+    @PostMapping("/movies")
     public ResponseEntity<Void> createMovie(@RequestBody @Valid MovieRequestRecord movieRequestDto){
         MovieResponseDto movie = movieService.createMovie(movieRequestDto);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -43,13 +43,13 @@ public class MovieController {
         return ResponseEntity.created(location).build();
     }
 
-    @PutMapping("/api/v1/movies/{movieId}")
+    @PutMapping("/movies/{movieId}")
     public ResponseEntity<Void> updateMovie(@PathVariable Long movieId, @RequestBody @Valid MovieRequestRecord movieRequestDto){
         movieService.updateMovie(movieId, movieRequestDto);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/api/v1/movies/{movieId}")
+    @DeleteMapping("/movies/{movieId}")
     public ResponseEntity<Void> deleteMovie(@PathVariable Long movieId){
         movieService.deleteMovie(movieId);
         return ResponseEntity.noContent().build();

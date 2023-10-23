@@ -15,7 +15,7 @@ import java.util.List;
 public class MyMovieController {
 
     private final MyMovieService movieService;
-    @GetMapping("/movies/pages/{pageNum}")
+    @GetMapping("/v2/movies/pages/{pageNum}")
     public ResponseEntity<List<MovieResponseDto>> getMoviesPaging(@PathVariable Long pageNum) {
         List<MovieResponseDto> movieList = movieService.getMoviesPaging(pageNum);
         if (movieList.isEmpty()) {
@@ -24,7 +24,7 @@ public class MyMovieController {
         return ResponseEntity.ok(movieList);
     }
 
-    @GetMapping("/movies/search") // cond?
+    @GetMapping("/v2/movies/search") // cond?
     public ResponseEntity<List<MovieResponseDto>> moviesBySearchCond(@ModelAttribute @Valid MovieSearchCond movieSearchCond) {
         List<MovieResponseDto> movieList = movieService.getMoviesBySearchCond(movieSearchCond);
         if (movieList.isEmpty()) {
@@ -33,7 +33,7 @@ public class MyMovieController {
         return ResponseEntity.ok(movieList);
     }
 
-    @PutMapping("/movies/{movieId}")
+    @PutMapping("/v2/movies/{movieId}")
     public ResponseEntity<Void> softDeleteMovie(@PathVariable Long movieId){
         movieService.softDeleteMovie(movieId);
         return ResponseEntity.ok().build();

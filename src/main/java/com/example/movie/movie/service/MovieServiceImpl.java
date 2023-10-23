@@ -40,14 +40,6 @@ public class MovieServiceImpl implements MovieService {
     @Override
     @Transactional
     public MovieResponseDto createMovie(MovieRequestRecord movieRequestDto) {
-        log.info("create Movie 시작 {}", movieRequestDto);
-        String movieName = movieRequestDto.movieName();
-
-        if (movieRepository.existsByMovieName(movieName)) {
-            log.info("중복입니다.");
-            throw new DataIntegrityViolationException("중복된 영화이름이 이미 존재합니다.");
-        }
-
         Movie movie = Movie.builder()
                 .movieName(movieRequestDto.movieName())
                 .genre(movieRequestDto.genre())
@@ -61,9 +53,12 @@ public class MovieServiceImpl implements MovieService {
 
         movieRepository.save(movie);
 
-        log.info("save 완료");
 
-        return MovieResponseDto.of(movie);
+        movie.setDirector("foo");
+
+        throw new IllegalArgumentException();
+
+//        return MovieResponseDto.of(movie);
     }
 
     @Override

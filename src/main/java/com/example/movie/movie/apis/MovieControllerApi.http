@@ -1,0 +1,19 @@
+###
+GET {{api-env}}/{{movieId}}
+
+> {%
+    client.test("Validate", function() {
+        client.assert(response.status === 200, "Response status is not 200"); // 응답값이 200이면 통과
+    });
+%}
+
+###
+POST {{api-env}}/movies
+
+
+###
+PUT {{api-env}}/movies/{{movieId}}
+
+
+###
+DELETE {{api-env}}/movies/{{movieId}}
