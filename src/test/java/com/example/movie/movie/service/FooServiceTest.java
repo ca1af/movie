@@ -1,6 +1,5 @@
 package com.example.movie.movie.service;
 
-import com.example.movie.common.aop.CountExeByMovieId;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,28 +45,30 @@ class FooServiceTest {
     }
 
     @Test
-    void addCountDirtyCheck() {
+    void addCountDirtyCheck() throws InterruptedException {
         id = testRestTemplate.postForObject("http://localhost:" + port + "/foo", null, Long.class);
         CountDownLatch latch = new CountDownLatch(1000);
 
         executeHttpRequests(() -> {
             testRestTemplate.postForEntity("http://localhost:" + port + "/foo/dirty?id=" + id, null, Void.class);
-            latch.countDown();
         }, 1000, latch);
+
+        Thread.sleep(10);
 
         Long updatedCount = testRestTemplate.getForObject("http://localhost:" + port + "/foo/" + id, Long.class);
         assertThat(updatedCount).isEqualTo(1000);
     }
 
     @Test
-    void addCountQuery() {
+    void addCountQuery() throws InterruptedException {
         id = testRestTemplate.postForObject("http://localhost:" + port + "/foo", null, Long.class);
         CountDownLatch latch = new CountDownLatch(1000);
 
         executeHttpRequests(() -> {
             testRestTemplate.postForEntity("http://localhost:" + port + "/foo/query?id=" + id, null, Void.class);
-            latch.countDown();
         }, 1000, latch);
+
+        Thread.sleep(100);
 
         Long updatedCount = testRestTemplate.getForObject("http://localhost:" + port + "/foo/" + id, Long.class);
         assertThat(updatedCount).isEqualTo(1000);
@@ -82,8 +83,8 @@ class FooServiceTest {
 
         executeHttpRequests(() -> {
             testRestTemplate.postForEntity("http://localhost:" + port + "/foo/exclusive?id=" + id, null, Void.class);
-            latch.countDown();
         }, 1000, latch);
+
 
         Long updatedCount = testRestTemplate.getForObject("http://localhost:" + port + "/foo/" + id, Long.class);
         assertThat(updatedCount).isEqualTo(1000);
